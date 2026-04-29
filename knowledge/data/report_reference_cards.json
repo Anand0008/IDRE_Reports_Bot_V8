@@ -1,0 +1,349 @@
+{
+  "version": "1.0",
+  "extracted_from": "IDRE codebase at C:\\Users\\anand\\Downloads\\local\\idre\\",
+  "extraction_date": "2026-04-29",
+  "description": "Ground-truth query logic extracted from each IDRE report route handler. Used by V7 (RAG retrieval), V8 (MCP tool responses), and V9 (verification baseline).",
+  "reports": [
+    {
+      "id": "due-dates",
+      "name": "Due Dates Report",
+      "api_route": "/api/reports/due-dates",
+      "source_files": [
+        "app/api/reports/due-dates/route.ts",
+        "lib/reports/due-dates.ts",
+        "lib/utils/due-date-utils.ts"
+      ],
+      "tables": ["case"],
+      "key_columns": [
+        "case.due_date",
+        "case.due_date_until_decision",
+        "case.eligibilityDueDate",
+        "case.paymentDueDate",
+        "case.status",
+        "case.disputeReferenceNumber",
+        "case.typeOfDispute",
+        "case.createdAt"
+      ],
+      "where_logic": "WHERE at least one of (due_date, due_date_until_decision, eligibilityDueDate, paymentDueDate) IS NOT NULL. Filters: dateRange preset (overdue/due_today/due_this_week/due_this_month/custom), caseStatuses (array), caseTypes (array), urgency (all/overdue/urgent/warning/normal).",
+      "critical_detail": "IDRE checks ALL 4 due date columns via OR conditions: due_date, due_date_until_decision, eligibilityDueDate, paymentDueDate. The 'primary due date' is computed in JS with priority: due_date > eligibilityDueDate > paymentDueDate > due_date_until_decision. Urgency is computed in JS memory, not in SQL. daysUntilDue = CEIL((primaryDueDate - now) / 86400000).",
+      "select_fields": "id, disputeReferenceNumber, status, createdAt, typeOfDispute, due_date, due_date_until_decision, eligibilityDueDate, paymentDueDate, assignedTo(id,name,email), initiatingParty(id,name,email), nonInitiatingParty(id,name,email)",
+      "order_by": "due_date ASC (default), or status, or createdAt",
+      "joins": "LEFT JOIN user AS assignedTo, LEFT JOIN user AS initiatingParty, LEFT JOIN user AS nonInitiatingParty",
+      "pagination": "Server-side skip/take for urgency='all'; in-memory filter then paginate for specific urgency",
+      "bot_sql_equivalent": "SELECT c.id, c.disputeReferenceNumber, c.status, c.createdAt, c.typeOfDispute, c.due_date, c.due_date_until_decision, c.eligibilityDueDate, c.paymentDueDate, CASE WHEN c.due_date IS NOT NULL THEN c.due_date WHEN c.eligibilityDueDate IS NOT NULL THEN c.eligibilityDueDate WHEN c.paymentDueDate IS NOT NULL THEN c.paymentDueDate WHEN c.due_date_until_decision IS NOT NULL THEN c.due_date_until_decision END AS primaryDueDate, CASE WHEN c.due_date IS NOT NULL THEN 'Current Due Date' WHEN c.eligibilityDueDate IS NOT NULL THEN 'Eligibility Due Date' WHEN c.paymentDueDate IS NOT NULL THEN 'Payment Due Date' WHEN c.due_date_until_decision IS NOT NULL THEN 'Decision Deadline' END AS dueDateType FROM `case` c WHERE (c.due_date IS NOT NULL OR c.due_date_until_decision IS NOT NULL OR c.eligibilityDueDate IS NOT NULL OR c.paymentDueDate IS NOT NULL) ORDER BY c.due_date ASC"
+    },
+    {
+      "id": "case-analytics",
+      "name": "Case Analytics Report",
+      "api_route": "/api/reports/case-analytics",
+      "source_files": [
+        "app/api/reports/case-analytics/route.ts",
+        "lib/utils/report-calculations.ts"
+      ],
+      "tables": ["case", "arbitration_decision"],
+      "key_columns": [
+        "case.createdAt",
+        "case.typeOfDispute",
+        "case.status",
+        "case.statusChangedAt",
+        "case.updatedAt",
+        "arbitration_decision.awardRecipient"
+      ],
+      "where_logic": "Optional filters: startDate/endDate (createdAt range), caseTypes (SINGLE/BUNDLED/BATCHED), caseStatuses. Active cases = status NOT IN ('CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','NOTICE_OF_DISMISSAL_NON_PAYMENT').",
+      "critical_detail": "Case volume is grouped by createdAt + typeOfDispute, then aggregated into monthly buckets in JS. Outcomes come from arbitration_decision.awardRecipient grouped (IP/NIP/Split). Processing time = CEIL(ABS(statusChangedAt - createdAt) / 86400000) for cases in CLOSED_* or FINAL_DETERMINATION_RENDERED statuses. Historical comparison uses current month vs previous month.",
+      "select_fields": "Monthly volume (month, total, single, batch, bundled), status duration, outcomes (outcome, count, percentage), batch vs individual comparison, key metrics (totalCases, avgResolutionTime, successRate, activeCases)",
+      "order_by": "createdAt ASC for volume trends",
+      "joins": "case → arbitration_decision (for outcomes)",
+      "bot_sql_equivalent": "For volume: SELECT DATE_FORMAT(c.createdAt, '%Y-%m') AS month, c.typeOfDispute, COUNT(*) AS cnt FROM `case` c GROUP BY month, c.typeOfDispute ORDER BY month; For outcomes: SELECT ad.awardRecipient, COUNT(*) AS cnt FROM arbitration_decision ad GROUP BY ad.awardRecipient; For processing time: SELECT AVG(CEIL(ABS(TIMESTAMPDIFF(SECOND, c.createdAt, COALESCE(c.statusChangedAt, c.updatedAt))) / 86400)) AS avg_days FROM `case` c WHERE c.status IN ('CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','CLOSED_SPLIT_DECISION','FINAL_DETERMINATION_RENDERED')"
+    },
+    {
+      "id": "case-balance",
+      "name": "Case Balance Report",
+      "api_route": "/api/reports/case-balance",
+      "source_files": [
+        "app/api/reports/case-balance/route.ts",
+        "lib/reports/case-balance-export.ts"
+      ],
+      "tables": ["case", "case_payment_allocation", "payment", "case_refunds"],
+      "key_columns": [
+        "case.id",
+        "case.shortId",
+        "case.disputeReferenceNumber",
+        "case.createdAt",
+        "case_payment_allocation.allocatedAmount",
+        "case_payment_allocation.createdAt",
+        "payment.direction",
+        "payment.status",
+        "payment.paidAt",
+        "case_refunds.refundAmountCents",
+        "case_refunds.status",
+        "case_refunds.createdAt"
+      ],
+      "where_logic": "Cases created <= target date. Payment allocations: direction='INCOMING', status IN ('COMPLETED','APPROVED'), createdAt <= endOfDay. Refunds: status='COMPLETED', createdAt <= endOfDay.",
+      "critical_detail": "Balance = SUM(allocatedAmount from INCOMING COMPLETED/APPROVED payments) - SUM(refundAmountCents/100 from COMPLETED refunds). Uses case_refunds table (NOT case_payment_allocation for refunds). The export query uses raw SQL with LEFT JOINs to case_payment_allocation and case_refunds. Summary aggregates totalAllocated and totalRefunded across all cases.",
+      "select_fields": "id, shortId (7-digit), disputeReferenceNumber, dateOpened, timeOpened, dateOfInitialFunding (MIN of paidAt or allocation createdAt), balance",
+      "order_by": "createdAt ASC, id ASC",
+      "joins": "case LEFT JOIN case_payment_allocation (caseId) JOIN payment (paymentId) LEFT JOIN case_refunds (caseId)",
+      "bot_sql_equivalent": "SELECT c.id, c.shortId, c.disputeReferenceNumber, c.createdAt, COALESCE(alloc.totalAllocated, 0) AS totalAllocated, COALESCE(ref.totalRefunded, 0) AS totalRefunded, (COALESCE(alloc.totalAllocated, 0) - COALESCE(ref.totalRefunded, 0)) AS balance FROM `case` c LEFT JOIN (SELECT cpa.caseId, SUM(cpa.allocatedAmount) AS totalAllocated FROM case_payment_allocation cpa JOIN payment p ON p.id = cpa.paymentId WHERE p.direction = 'INCOMING' AND p.status IN ('COMPLETED','APPROVED') GROUP BY cpa.caseId) alloc ON alloc.caseId = c.id LEFT JOIN (SELECT cr.caseId, SUM(cr.refundAmountCents) / 100.0 AS totalRefunded FROM case_refunds cr WHERE cr.status = 'COMPLETED' GROUP BY cr.caseId) ref ON ref.caseId = c.id ORDER BY c.createdAt ASC"
+    },
+    {
+      "id": "outstanding-payments",
+      "name": "Outstanding Payments Report",
+      "api_route": "/api/reports/outstanding-payments",
+      "source_files": [
+        "app/api/reports/outstanding-payments/route.ts",
+        "lib/constants/pricing.ts"
+      ],
+      "tables": ["case", "case_payment_allocation", "payment", "organization", "user", "dispute_line_items"],
+      "key_columns": [
+        "case.status",
+        "case.disputeReferenceNumber",
+        "case.createdAt",
+        "case.typeOfDispute",
+        "case_payment_allocation.partyType",
+        "payment.status",
+        "payment.direction",
+        "payment.createdAt"
+      ],
+      "where_logic": "case.status IN ('PENDING_PAYMENTS','PENDING_SECOND_PAYMENT','PENDING_ADMINISTRATIVE_CLOSURE','INELIGIBLE','INELIGIBLE_PENDING_ADMIN_FEE'). Then in JS: filter to cases where at least one party has NOT paid. Payment is considered 'paid' if latest INCOMING payment for that party has status IN ('PENDING','APPROVED','COMPLETED').",
+      "critical_detail": "Status set is exactly 5 values. Payment check looks at latest INCOMING payment per party (INITIATING/NON_INITIATING) sorted by createdAt DESC. 'Paid' means status is PENDING, APPROVED, or COMPLETED. Amount due is calculated from pricing: SINGLE/BUNDLED=$595 entity fee, BATCHED=$795 base + surcharge per 25 items. Payment due date = 30 business days from case creation (skipping weekends).",
+      "select_fields": "caseId, disputeId, dateOpened, paymentDueDate, IP/NIP organization names+emails, ipPaymentReceived, nipPaymentReceived, amountDue, status",
+      "order_by": "createdAt ASC",
+      "joins": "case → initiatingPartyOrganization, nonInitiatingPartyOrganization (with members), DisputeLineItems, paymentAllocations → payment",
+      "bot_sql_equivalent": "SELECT c.id, c.disputeReferenceNumber, c.status, c.createdAt, c.typeOfDispute, ipo.name AS ipOrgName, nipo.name AS nipOrgName FROM `case` c LEFT JOIN organization ipo ON c.initiatingPartyOrganizationId = ipo.id LEFT JOIN organization nipo ON c.nonInitiatingPartyOrganizationId = nipo.id WHERE c.status IN ('PENDING_PAYMENTS','PENDING_SECOND_PAYMENT','PENDING_ADMINISTRATIVE_CLOSURE','INELIGIBLE','INELIGIBLE_PENDING_ADMIN_FEE') ORDER BY c.createdAt ASC"
+    },
+    {
+      "id": "cms-payments",
+      "name": "CMS Payments Analytics",
+      "api_route": "/api/reports/cms-payments",
+      "source_files": [
+        "app/api/reports/cms-payments/route.ts",
+        "lib/utils/report-calculations.ts"
+      ],
+      "tables": ["payment", "case_payment_allocation", "case"],
+      "key_columns": [
+        "payment.type",
+        "payment.status",
+        "payment.amount",
+        "payment.createdAt",
+        "case_payment_allocation.allocatedAmount",
+        "case_payment_allocation.caseId",
+        "case.typeOfDispute"
+      ],
+      "where_logic": "payment.type = 'CASE_PAYMENT' (NOT 'CMS_INVOICE_PAYMENT' or 'CMS_ADMIN_FEE_TRANSFER'). Optional filters: startDate/endDate, paymentStatuses, caseTypes (via caseAllocations → case → typeOfDispute).",
+      "critical_detail": "CRITICAL: The CMS payments report filters on type='CASE_PAYMENT', NOT on CMS-specific payment types. The bot's glossary incorrectly maps CMS payments to type IN ('CMS_INVOICE_PAYMENT','CMS_ADMIN_FEE_TRANSFER'). Payment trends are monthly aggregations of CASE_PAYMENT amounts. Payment by type groups allocations by case typeOfDispute (Single/Batched/Bundled). Outstanding = status IN ('PENDING','ON_HOLD') with type='CASE_PAYMENT'.",
+      "select_fields": "Key metrics (totalPayments, avgPaymentAmount, avgProcessingTime, outstandingPayments), payment trends (monthly), payment by type, payment status distribution, processing timeline",
+      "order_by": "createdAt ASC for trends",
+      "joins": "payment → caseAllocations → case (for typeOfDispute grouping)",
+      "bot_sql_equivalent": "SELECT DATE_FORMAT(p.createdAt, '%Y-%m') AS month, SUM(p.amount) AS total_amount, COUNT(DISTINCT cpa.caseId) AS case_count FROM payment p LEFT JOIN case_payment_allocation cpa ON cpa.paymentId = p.id WHERE p.type = 'CASE_PAYMENT' GROUP BY month ORDER BY month"
+    },
+    {
+      "id": "dashboard-stats",
+      "name": "Dashboard Statistics",
+      "api_route": "/api/reports/dashboard-stats",
+      "source_files": [
+        "app/api/reports/dashboard-stats/route.ts",
+        "lib/utils/report-calculations.ts"
+      ],
+      "tables": ["case", "payment", "user"],
+      "key_columns": [
+        "case.createdAt",
+        "payment.type",
+        "payment.status",
+        "payment.amount",
+        "user.role"
+      ],
+      "where_logic": "Total cases: optional date filter. Payments: type='CASE_PAYMENT' AND status='COMPLETED'. Arbitrators: role IN ('arbitrator','arbitrator-contractor').",
+      "critical_detail": "Dashboard shows 4 KPIs: totalCases, totalPayments (COMPLETED CASE_PAYMENT sum), avgProcessingTime (for closed cases), activeArbitrators. Each has historical comparison (current month vs previous month). Processing time uses calculateProcessingTime which queries cases in CLOSED_*/FINAL_DETERMINATION_RENDERED statuses.",
+      "select_fields": "totalCases (value, change, changeType), totalPayments (value, count, change, changeType), avgProcessingTime (value, change, changeType), activeArbitrators (value, change, changeType)",
+      "order_by": "N/A (aggregate metrics)",
+      "joins": "None (separate queries for each metric)",
+      "bot_sql_equivalent": "SELECT COUNT(*) AS total_cases FROM `case`; SELECT SUM(p.amount) AS total_payments, COUNT(*) AS payment_count FROM payment p WHERE p.type = 'CASE_PAYMENT' AND p.status = 'COMPLETED'; SELECT COUNT(*) AS active_arbitrators FROM user WHERE role IN ('arbitrator','arbitrator-contractor'); SELECT AVG(CEIL(ABS(TIMESTAMPDIFF(SECOND, c.createdAt, COALESCE(c.statusChangedAt, c.updatedAt))) / 86400)) AS avg_processing_days FROM `case` c WHERE c.status IN ('CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','CLOSED_SPLIT_DECISION','FINAL_DETERMINATION_RENDERED')"
+    },
+    {
+      "id": "team-performance",
+      "name": "Team Performance Report",
+      "api_route": "/api/reports/team-performance",
+      "source_files": [
+        "app/api/reports/team-performance/route.ts",
+        "lib/utils/report-calculations.ts"
+      ],
+      "tables": ["user", "case", "arbitration_decision", "case_action"],
+      "key_columns": [
+        "user.role",
+        "user.name",
+        "case.assignedToId",
+        "case.status",
+        "case.createdAt",
+        "case.statusChangedAt",
+        "arbitration_decision.awardRecipient",
+        "case_action.actionType"
+      ],
+      "where_logic": "Users with role IN ('arbitrator','arbitrator-contractor','admin-support','eligibility-specialist'). Cases resolved = status IN ('CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','FINAL_DETERMINATION_RENDERED'). Optional date and arbitrator filters.",
+      "critical_detail": "User productivity joins user → assignedCases → arbitrationDecision. Resolution time = CEIL(ABS(statusChangedAt - createdAt) / 86400000) per user's resolved cases. Success rate = decisions with awardRecipient in (IP, NIP) / total decisions. Appeal rate = cases with >1 DECISION_RENDERED case_action / total decisions. Performance benchmarks: cases/month, resolution time, success rate, appeal rate.",
+      "select_fields": "Key metrics (activeTeamMembers, avgCasesPerMonth, teamSuccessRate, avgResolutionTime), userProductivity (name, role, casesResolved, avgResolutionTime, successRate), arbitratorPerformance (monthly trends), workloadDistribution (user, assigned, completed, pending), performanceBenchmarks",
+      "order_by": "createdAt ASC for trends",
+      "joins": "user → assignedCases (case), user → arbitrationDecisions, case → caseActions",
+      "bot_sql_equivalent": "SELECT u.name, u.role, COUNT(CASE WHEN c.status IN ('CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','FINAL_DETERMINATION_RENDERED') THEN 1 END) AS cases_resolved, COUNT(c.id) AS total_assigned FROM user u LEFT JOIN `case` c ON c.assignedToId = u.id WHERE u.role IN ('arbitrator','arbitrator-contractor','admin-support','eligibility-specialist') GROUP BY u.id, u.name, u.role ORDER BY cases_resolved DESC"
+    },
+    {
+      "id": "unpaid-disputes",
+      "name": "Unpaid Disputes Report",
+      "api_route": "/api/reports/unpaid-disputes",
+      "source_files": [
+        "app/api/reports/unpaid-disputes/route.ts"
+      ],
+      "tables": ["case", "case_payment_allocation", "payment", "user", "organization"],
+      "key_columns": [
+        "case.status",
+        "case.disputeReferenceNumber",
+        "case.createdAt",
+        "case.statusChangedAt",
+        "case_payment_allocation.partyType",
+        "payment.status",
+        "payment.direction"
+      ],
+      "where_logic": "case.status IN ('PENDING_PAYMENTS','PENDING_SECOND_PAYMENT','PENDING_ADMINISTRATIVE_CLOSURE','INELIGIBLE','INELIGIBLE_PENDING_ADMIN_FEE'). Then JS filters to cases where at least one party has NOT paid.",
+      "critical_detail": "Same status set and payment check logic as outstanding-payments. Paid = latest INCOMING payment for party has status IN ('PENDING','APPROVED','COMPLETED'). Returns per-party payment status (ipPaymentStatus, nipPaymentStatus), organization names, and readyForPaymentDate (statusChangedAt for payment statuses, createdAt otherwise).",
+      "select_fields": "disputeId, organizationName, nipPaymentStatus, nipName, nipEmail, ipPaymentStatus, ipName, ipEmail, readyForPaymentDate, caseStatus",
+      "order_by": "createdAt ASC",
+      "joins": "case → initiatingParty, nonInitiatingParty, initiatingPartyOrganization, nonInitiatingPartyOrganization, organization, paymentAllocations → payment",
+      "bot_sql_equivalent": "SELECT c.disputeReferenceNumber, c.status, c.createdAt, ip.name AS ipName, nip.name AS nipName, ipo.name AS ipOrgName, nipo.name AS nipOrgName FROM `case` c LEFT JOIN user ip ON c.initiatingPartyId = ip.id LEFT JOIN user nip ON c.nonInitiatingPartyId = nip.id LEFT JOIN organization ipo ON c.initiatingPartyOrganizationId = ipo.id LEFT JOIN organization nipo ON c.nonInitiatingPartyOrganizationId = nipo.id WHERE c.status IN ('PENDING_PAYMENTS','PENDING_SECOND_PAYMENT','PENDING_ADMINISTRATIVE_CLOSURE','INELIGIBLE','INELIGIBLE_PENDING_ADMIN_FEE') ORDER BY c.createdAt ASC"
+    },
+    {
+      "id": "idre-payouts",
+      "name": "IDRE Payouts Report",
+      "api_route": "/api/reports/idre-payouts",
+      "source_files": [
+        "app/api/reports/idre-payouts/route.ts",
+        "lib/constants/pricing.ts"
+      ],
+      "tables": ["payment", "case_payment_allocation", "case", "dispute_line_items"],
+      "key_columns": [
+        "payment.direction",
+        "payment.status",
+        "payment.createdAt",
+        "payment.bankingSnapshot",
+        "payment.recipientName",
+        "payment.processedAt",
+        "payment.paidAt",
+        "case.disputeReferenceNumber",
+        "case.status",
+        "case.typeOfDispute",
+        "case.decision_date",
+        "case.closed_at",
+        "case.closure_reason"
+      ],
+      "where_logic": "payment.direction='OUTGOING', payment.status='COMPLETED', createdAt in date range. Then JS filters: payee (from bankingSnapshot.accountHolderName or recipientName) must be one of ['halo','veratru','capitol bridge'] (case-insensitive).",
+      "critical_detail": "Payee is extracted from payment.bankingSnapshot JSON (accountHolderName field) or payment.recipientName as fallback. Only includes rows where payee matches halo, veratru, or capitol bridge. Entity fee per party is calculated from case pricing with discounts for settlement/withdrawal (50% off) and zero for ineligible/non-payment-dismissal cases.",
+      "select_fields": "Payee, Dispute ID, Dispute Status, Date Decision Rendered, Date Dispute Closed, Entity Fee Paid Per Party, Date Payment Completed",
+      "order_by": "payment.createdAt DESC",
+      "joins": "payment → caseAllocations → case → DisputeLineItems",
+      "bot_sql_equivalent": "SELECT p.recipientName AS payee, c.disputeReferenceNumber, c.status, c.decision_date, c.closed_at, p.amount, p.createdAt FROM payment p JOIN case_payment_allocation cpa ON cpa.paymentId = p.id JOIN `case` c ON c.id = cpa.caseId WHERE p.direction = 'OUTGOING' AND p.status = 'COMPLETED' AND p.createdAt >= {from_date} AND p.createdAt <= {to_date} AND LOWER(COALESCE(p.recipientName, '')) IN ('halo', 'veratru', 'capitol bridge') ORDER BY p.createdAt DESC"
+    },
+    {
+      "id": "daily-funds",
+      "name": "Daily Funds (Incoming/Outgoing) Report",
+      "api_route": "/api/reports/auditing/daily-funds",
+      "source_files": [
+        "app/api/reports/auditing/daily-funds/route.ts",
+        "lib/utils/date-utils.ts"
+      ],
+      "tables": ["payment", "nacha_batch", "case_payment_allocation", "case", "user", "cms_invoice"],
+      "key_columns": [
+        "payment.status",
+        "payment.direction",
+        "payment.amount",
+        "payment.createdAt",
+        "payment.transactionId",
+        "payment.paymentMethod",
+        "payment.nachaBatchId",
+        "nacha_batch.createdAt",
+        "cms_invoice.status",
+        "cms_invoice.totalAmount",
+        "cms_invoice.createdAt"
+      ],
+      "where_logic": "Incoming: status IN ('APPROVED','COMPLETED'), direction='INCOMING', date filter on nachaBatch.createdAt (if has batch) OR payment.createdAt (if no batch). Outgoing: same but direction='OUTGOING'. CMS Invoices: status IN ('RECEIVED','VALIDATED','PROCESSED'), createdAt in day range. Date bounds are EST day boundaries.",
+      "critical_detail": "Date filtering uses EST timezone boundaries (getESTDayBounds). For payments with NACHA batches, the effective date is nachaBatch.createdAt, not payment.createdAt. Net position = incoming - outgoing - invoices. Separate sections for incoming payments, outgoing payments, and CMS invoices.",
+      "select_fields": "Incoming: id, amount, description, createdAt, type, status, transactionId, paymentMethod, caseReferenceNumber, partyName. Outgoing: same + recipientName. Invoices: id, invoiceNumber, amount, status. Summary: netPosition.",
+      "order_by": "nachaBatch.createdAt DESC, then payment.createdAt DESC",
+      "joins": "payment → nachaBatch, payment → caseAllocations → case → initiatingParty/nonInitiatingParty",
+      "bot_sql_equivalent": "SELECT p.id, p.amount, p.direction, p.type, p.status, p.createdAt, nb.createdAt AS batchDate, c.disputeReferenceNumber FROM payment p LEFT JOIN nacha_batch nb ON nb.id = p.nachaBatchId LEFT JOIN case_payment_allocation cpa ON cpa.paymentId = p.id LEFT JOIN `case` c ON c.id = cpa.caseId WHERE p.status IN ('APPROVED','COMPLETED') AND (nb.createdAt BETWEEN {start} AND {end} OR (p.nachaBatchId IS NULL AND p.createdAt BETWEEN {start} AND {end})) ORDER BY COALESCE(nb.createdAt, p.createdAt) DESC"
+    },
+    {
+      "id": "daily-transactions",
+      "name": "Daily Transactions Report",
+      "api_route": "/api/reports/auditing/daily-transactions",
+      "source_files": [
+        "app/api/reports/auditing/daily-transactions/route.ts"
+      ],
+      "tables": ["case_payment_allocation", "payment", "case"],
+      "key_columns": [
+        "payment.amount",
+        "payment.type",
+        "payment.createdAt",
+        "case_payment_allocation.partyType",
+        "case.shortId",
+        "case.disputeReferenceNumber"
+      ],
+      "where_logic": "payment.createdAt between from and to dates (UTC day boundaries). No direction or status filter — includes ALL payment allocations in date range.",
+      "critical_detail": "Uses raw SQL ($queryRaw) for performance. Joins case_payment_allocation → payment → case. Transaction type is derived from payment.type + partyType (e.g. 'Case Payment IP', 'Capitol Bridge', 'Refund NIP'). 7-digit ID is case.shortId. Pagination via LIMIT/OFFSET with hasMore flag. Summary includes totalCount, totalAmount, averageAmount.",
+      "select_fields": "sevenDigitId (shortId), disputeName (disputeReferenceNumber), amount, type (derived), occurredAt (createdAt), caseId",
+      "order_by": "payment.createdAt ASC, payment.id ASC",
+      "joins": "case_payment_allocation INNER JOIN payment INNER JOIN case",
+      "bot_sql_equivalent": "SELECT c.shortId AS sevenDigitId, c.disputeReferenceNumber AS disputeName, p.amount, p.type AS paymentType, cpa.partyType, p.createdAt AS occurredAt FROM case_payment_allocation cpa INNER JOIN payment p ON p.id = cpa.paymentId INNER JOIN `case` c ON c.id = cpa.caseId WHERE p.createdAt >= {from} AND p.createdAt <= {to} ORDER BY p.createdAt ASC, p.id ASC LIMIT {limit} OFFSET {offset}"
+    },
+    {
+      "id": "recent-activity",
+      "name": "Recent Activity Feed",
+      "api_route": "/api/reports/recent-activity",
+      "source_files": [
+        "app/api/reports/recent-activity/route.ts"
+      ],
+      "tables": ["case_action", "case", "user", "payment"],
+      "key_columns": [
+        "case_action.actionType",
+        "case_action.createdAt",
+        "case_action.toValue",
+        "case.disputeReferenceNumber",
+        "user.name",
+        "user.role",
+        "payment.amount",
+        "payment.status",
+        "payment.createdAt"
+      ],
+      "where_logic": "Default: last 7 days. Optional startDate/endDate filter. Case actions: top 10 by createdAt DESC. Payments: top 5 with type='CASE_PAYMENT'. Cases: top 5 most recent.",
+      "critical_detail": "Unified activity feed combining case actions (status changes, assignments, notes), payments, and case submissions. Limited to top 5 items after merging and sorting. Action types include STATUS_CHANGED, ASSIGNED, NOTE_ADDED, NOTE_REPLY_ADDED, NOTE_DELETED, LINE_ITEM_REMOVED.",
+      "select_fields": "type, message, detail, timestamp (relative: 'X minutes/hours/days ago'), icon, color",
+      "order_by": "Most recent first (after merging all sources)",
+      "joins": "case_action → case, case_action → user",
+      "bot_sql_equivalent": "SELECT ca.actionType, ca.toValue, ca.createdAt, c.disputeReferenceNumber, u.name AS userName FROM case_action ca JOIN `case` c ON c.id = ca.caseId LEFT JOIN user u ON u.id = ca.userId WHERE ca.createdAt >= DATE_SUB(NOW(), INTERVAL 7 DAY) ORDER BY ca.createdAt DESC LIMIT 10"
+    },
+    {
+      "id": "payment-variance",
+      "name": "Payment Variance Report",
+      "api_route": "N/A (export only via /api/reports/exports)",
+      "source_files": [
+        "lib/reports/payment-variance-export.ts",
+        "lib/payments/variance-reconciliation.ts"
+      ],
+      "tables": ["payment", "case_payment_allocation", "case", "user"],
+      "key_columns": [
+        "payment.varianceType",
+        "payment.varianceAmount",
+        "payment.expectedAmount",
+        "payment.amount",
+        "payment.refundStatus",
+        "payment.collectionStatus",
+        "payment.direction",
+        "payment.createdAt"
+      ],
+      "where_logic": "payment.varianceType IS NOT NULL AND payment.varianceAmount > 0. Then filtered by OVERPAYMENT or UNDERPAYMENT. Overpayments with varianceAmount <= 0.009 are excluded. Optional filters: refundStatus, collectionStatus, unreconciledOnly.",
+      "critical_detail": "Variance reconciliation groups payments by (caseId, partyType) and recalculates net variance across the group. This can override individual payment varianceType/varianceAmount. For overpayments: unreconciled means refundStatus != 'COMPLETED'. For underpayments: unreconciled means collectionStatus != 'RESOLVED'. Small overpayments (<=0.009) are always excluded.",
+      "select_fields": "paymentId, case (disputeReferenceNumber), IP name, NIP name, expected, received, variance, status (refundStatus or collectionStatus), varianceNote",
+      "order_by": "payment.createdAt DESC",
+      "joins": "payment → caseAllocations → case → initiatingParty, nonInitiatingParty",
+      "bot_sql_equivalent": "SELECT p.id, p.amount, p.expectedAmount, p.varianceAmount, p.varianceType, p.refundStatus, p.collectionStatus, c.disputeReferenceNumber FROM payment p LEFT JOIN case_payment_allocation cpa ON cpa.paymentId = p.id LEFT JOIN `case` c ON c.id = cpa.caseId WHERE p.varianceType IS NOT NULL AND p.varianceAmount > 0 ORDER BY p.createdAt DESC"
+    }
+  ]
+}
