@@ -1,0 +1,58 @@
+{
+  "version": "v6.0",
+  "last_updated": "2026-04-26",
+  "pricing_versions": {
+    "current": {
+      "SINGLE":  {"entity_fee": 595.00, "cms_fee": 115.00, "total": 710.00},
+      "BUNDLED": {"entity_fee": 595.00, "cms_fee": 115.00, "total": 710.00},
+      "BATCHED": {"entity_fee": 795.00, "cms_fee": 115.00, "base_total": 910.00, "surcharge_per_25": 150.00}
+    },
+    "pre_2025": {
+      "SINGLE":  {"entity_fee": 550.00, "cms_fee": 100.00, "total": 650.00},
+      "BUNDLED": {"entity_fee": 550.00, "cms_fee": 100.00, "total": 650.00},
+      "BATCHED": {"entity_fee": 750.00, "cms_fee": 100.00, "base_total": 850.00, "surcharge_per_25": 125.00}
+    }
+  },
+  "pricing_era_boundaries": [
+    {
+      "era_name": "current",
+      "effective_date": "2025-01-01",
+      "description": "Current pricing structure"
+    },
+    {
+      "era_name": "pre_2025",
+      "effective_date": "2023-01-01",
+      "description": "Previous pricing before January 2025 update"
+    }
+  ],
+  "direction_labels": {
+    "INCOMING": "Received",
+    "OUTGOING": "Sent"
+  },
+  "payment_type_labels": {
+    "CASE_PAYMENT": "Case Fee",
+    "REFUND_TO_PREVAILING_PARTY": "Party Refund",
+    "PARTY_REFUND_IP": "IP Refund",
+    "PARTY_REFUND_NIP": "NIP Refund",
+    "CAPITOL_BRIDGE_FEE": "Capitol Bridge Fee",
+    "THIRD_PARTY_PAYMENT": "Internal Payout",
+    "CMS_INVOICE_PAYMENT": "CMS Payment",
+    "CMS_ADMIN_FEE_TRANSFER": "CMS Admin Fee"
+  },
+  "terminal_statuses": [
+    "CLOSED_DEFAULT",
+    "CLOSED_INITIATING_PARTY",
+    "CLOSED_NON_INITIATING_PARTY",
+    "CLOSED_ADMINISTRATIVE",
+    "CLOSED_SPLIT_DECISION",
+    "NOTICE_OF_DISMISSAL_NON_PAYMENT",
+    "CLOSED_DEFAULT_IP",
+    "CLOSED_DEFAULT_NIP",
+    "INELIGIBLE"
+  ],
+  "urgency_thresholds": {
+    "overdue_days": 0,
+    "urgent_days": 1,
+    "warning_days": 3
+  }
+}
