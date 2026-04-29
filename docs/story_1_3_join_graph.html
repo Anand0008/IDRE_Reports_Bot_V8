@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Story 1.3 — Join Graph Utility</title>
+<style>
+  :root {
+    --bg:        #0f1117;
+    --surface:   #1a1d27;
+    --surface2:  #22263a;
+    --border:    #2e3350;
+    --accent:    #4A90D9;
+    --purple:    #9B59B6;
+    --green:     #27AE60;
+    --orange:    #E67E22;
+    --red:       #E74C3C;
+    --yellow:    #F1C40F;
+    --text:      #e8eaf0;
+    --muted:     #7a82a0;
+    --code-bg:   #141722;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  a { color: var(--accent); }
+
+  /* ── layout ── */
+  .page { max-width: 1100px; margin: 0 auto; padding: 48px 32px 80px; }
+  .section { margin-bottom: 60px; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  h2 { font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 18px; }
+  h3 { font-size: 14px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+  p  { color: #b0b8d0; margin-bottom: 10px; }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 2px 10px; border-radius: 20px; margin-right: 6px;
+  }
+  .tag-epic   { background: #4A90D922; color: var(--accent); border: 1px solid #4A90D955; }
+  .tag-story  { background: #9B59B622; color: var(--purple); border: 1px solid #9B59B655; }
+  .tag-done   { background: #27AE6022; color: var(--green);  border: 1px solid #27AE6055; }
+
+  /* ── hero banner ── */
+  .hero {
+    background: linear-gradient(135deg, #1a1d27 0%, #161b30 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, #4A90D915 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .hero h1 { font-size: 32px; }
+  .hero .subtitle { font-size: 15px; color: #8892b0; margin-top: 8px; max-width: 600px; }
+
+  /* ── problem / solution split ── */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card.problem { border-top: 3px solid var(--red); }
+  .card.solution { border-top: 3px solid var(--green); }
+  .card-icon { font-size: 28px; margin-bottom: 12px; }
+  .card h3 { color: var(--text); text-transform: none; font-size: 15px; margin-bottom: 10px; }
+
+  /* ── before / after ── */
+  .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 700px) { .before-after { grid-template-columns: 1fr; } }
+  .ba-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ba-header {
+    padding: 12px 18px;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ba-header.before { background: #E74C3C18; color: var(--red); border-bottom: 1px solid #E74C3C33; }
+  .ba-header.after  { background: #27AE6018; color: var(--green); border-bottom: 1px solid #27AE6033; }
+  .ba-body { padding: 18px; }
+  pre, code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    line-height: 1.7;
+  }
+  .hl-table  { color: #79C0FF; }
+  .hl-join   { color: #FF7B72; }
+  .hl-on     { color: #F0883E; }
+  .hl-col    { color: #A5D6FF; }
+  .hl-kw     { color: #FF7B72; }
+  .hl-val    { color: #A8FF7B; }
+  .hl-cmt    { color: #6a7289; font-style: italic; }
+
+  /* ── FK graph diagram ── */
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    overflow: hidden;
+  }
+  svg text { font-family: 'Segoe UI', system-ui, sans-serif; }
+
+  /* ── pipeline diagram ── */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .pipe-step {
+    flex: 1;
+    padding: 22px 16px;
+    text-align: center;
+    position: relative;
+  }
+  .pipe-step + .pipe-step::before {
+    content: '→';
+    position: absolute;
+    left: -12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 18px;
+  }
+  .pipe-step .pipe-icon { font-size: 26px; margin-bottom: 8px; }
+  .pipe-step .pipe-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .pipe-step .pipe-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .pipe-step.highlight {
+    background: linear-gradient(135deg, #4A90D912, #9B59B612);
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+  .pipe-step.highlight .pipe-name { color: var(--accent); }
+
+  /* ── algo steps ── */
+  .algo-steps { display: flex; flex-direction: column; gap: 12px; }
+  .algo-step {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .algo-num {
+    width: 28px; height: 28px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+  }
+  .algo-content .algo-title { font-weight: 600; margin-bottom: 4px; }
+  .algo-content .algo-desc  { font-size: 13px; color: #8892b0; }
+
+  /* ── path example ── */
+  .path-row {
+    display: flex; align-items: center; gap: 0;
+    flex-wrap: wrap;
+  }
+  .path-node {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .path-node.start { border-color: var(--accent); color: var(--accent); }
+  .path-node.end   { border-color: var(--green);  color: var(--green); }
+  .path-node.via   { border-color: var(--purple); color: var(--purple); }
+  .path-edge {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 8px;
+    font-size: 11px; color: var(--muted);
+    text-align: center;
+  }
+  .path-edge .arrow { font-size: 18px; color: var(--muted); line-height: 1; }
+  .path-edge .label { font-size: 10px; color: var(--muted); white-space: nowrap; }
+
+  /* ── stats row ── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 700px) { .stats { grid-template-columns: 1fr 1fr; } }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    text-align: center;
+  }
+  .stat-val { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── api docs ── */
+  .fn-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .fn-header {
+    background: var(--code-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 13px;
+    color: #79C0FF;
+  }
+  .fn-body { padding: 18px 20px; }
+  .fn-row { display: flex; gap: 12px; margin-bottom: 8px; font-size: 13px; }
+  .fn-param { color: #A5D6FF; font-family: monospace; min-width: 100px; }
+  .fn-pdesc { color: #8892b0; }
+  .fn-returns { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; color: #8892b0; }
+  .fn-returns code { color: var(--green); background: #27AE6015; padding: 1px 5px; border-radius: 4px; }
+
+  divider { display: block; height: 1px; background: var(--border); margin: 40px 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-label">
+      <span class="tag tag-epic">Epic 1 — Schema Catalog</span>
+      <span class="tag tag-story">Story 1.3</span>
+      <span class="tag tag-done">✓ Implemented</span>
+    </div>
+    <h1>Join Graph Utility</h1>
+    <p class="subtitle">
+      Automatically resolves JOIN paths between any two tables using the database's
+      foreign-key graph — so the SQL writer always knows <em>how</em> to connect tables,
+      not just <em>which</em> ones to use.
+    </p>
+  </div>
+
+  <!-- ── Problem / Solution ── -->
+  <div class="section">
+    <h2>Why it exists</h2>
+    <div class="split">
+      <div class="card problem">
+        <div class="card-icon">⚠️</div>
+        <h3>The Problem (before 1.3)</h3>
+        <p>The schema mapper returned a list of table names. The SQL writer knew <em>what</em> tables were relevant but had no information about <em>how</em> to connect them.</p>
+        <p>The LLM had to <strong>guess JOIN conditions</strong> from column names alone — leading to wrong joins, missing intermediate tables, and Cartesian products.</p>
+        <pre><code><span class="hl-cmt">-- LLM guessed (often wrong)</span>
+<span class="hl-kw">SELECT</span> c.id, p.amount
+<span class="hl-kw">FROM</span> <span class="hl-table">`case`</span> c
+<span class="hl-join">JOIN</span> <span class="hl-table">`payment`</span> p
+  <span class="hl-on">ON</span> c.id <span class="hl-col">= p.caseId</span>
+<span class="hl-cmt">-- ❌ payment has no caseId column!</span></code></pre>
+      </div>
+      <div class="card solution">
+        <div class="card-icon">✅</div>
+        <h3>The Solution (after 1.3)</h3>
+        <p>The join graph traverses the FK relationships extracted from the database and injects <strong>exact, correct JOIN clauses</strong> directly into the schema context.</p>
+        <p>The LLM receives ready-to-use SQL snippets — it no longer needs to guess column names or intermediate tables.</p>
+        <pre><code><span class="hl-cmt">-- Join graph resolved (correct)</span>
+<span class="hl-kw">SELECT</span> c.id, p.amount
+<span class="hl-kw">FROM</span> <span class="hl-table">`case`</span> c
+<span class="hl-join">JOIN</span> <span class="hl-table">`case_payment_allocation`</span> cpa
+  <span class="hl-on">ON</span> c.<span class="hl-col">id</span> = cpa.<span class="hl-col">caseId</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`payment`</span> p
+  <span class="hl-on">ON</span> cpa.<span class="hl-col">paymentId</span> = p.<span class="hl-col">id</span>
+<span class="hl-cmt">-- ✅ Correct 2-hop path via allocation</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Stats ── -->
+  <div class="section">
+    <h2>Database FK graph — by the numbers</h2>
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-val">44</div>
+        <div class="stat-lbl">Tables in schema</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">83</div>
+        <div class="stat-lbl">FK relationships mapped</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">166</div>
+        <div class="stat-lbl">Bidirectional graph edges</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val">≤2</div>
+        <div class="stat-lbl">Max hops injected into context</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pipeline position ── -->
+  <div class="section">
+    <h2>Where it sits in the pipeline</h2>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-icon">💬</div>
+        <div class="pipe-name">User Query</div>
+        <div class="pipe-desc">Natural language input</div>
+      </div>
+      <div class="pipe-step highlight">
+        <div class="pipe-icon">🔍</div>
+        <div class="pipe-name">Schema Mapper</div>
+        <div class="pipe-desc">Vector search → relevant tables<br/><strong style="color:#4A90D9">+ join graph injection</strong></div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">✍️</div>
+        <div class="pipe-name">SQL Writer</div>
+        <div class="pipe-desc">Receives schema + join hints → generates SQL</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🛡️</div>
+        <div class="pipe-name">Validator</div>
+        <div class="pipe-desc">Safety checks</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">⚡</div>
+        <div class="pipe-name">Executor</div>
+        <div class="pipe-desc">Runs query</div>
+      </div>
+    </div>
+    <p style="margin-top:14px; font-size:13px; color:var(--muted);">
+      The join graph runs entirely within the Schema Mapper node — no extra pipeline step, no latency added beyond JSON parsing.
+    </p>
+  </div>
+
+  <!-- ── FK graph SVG ── -->
+  <div class="section">
+    <h2>Visualising the FK graph (key reporting tables)</h2>
+    <div class="graph-wrap">
+      <svg viewBox="0 0 900 420" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4A90D9" opacity="0.7"/>
+          </marker>
+          <marker id="arrow-grn" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#27AE60" opacity="0.7"/>
+          </marker>
+          <marker id="arrow-pur" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#9B59B6" opacity="0.7"/>
+          </marker>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- background grid lines -->
+        <g opacity="0.06">
+          <line x1="0" y1="105" x2="900" y2="105" stroke="#fff" stroke-width="1"/>
+          <line x1="0" y1="210" x2="900" y2="210" stroke="#fff" stroke-width="1"/>
+          <line x1="0" y1="315" x2="900" y2="315" stroke="#fff" stroke-width="1"/>
+          <line x1="225" y1="0" x2="225" y2="420" stroke="#fff" stroke-width="1"/>
+          <line x1="450" y1="0" x2="450" y2="420" stroke="#fff" stroke-width="1"/>
+          <line x1="675" y1="0" x2="675" y2="420" stroke="#fff" stroke-width="1"/>
+        </g>
+
+        <!-- ── EDGES ── -->
+        <!-- case → case_payment_allocation (direct) -->
+        <line x1="200" y1="190" x2="370" y2="190" stroke="#4A90D9" stroke-width="2" opacity="0.8" marker-end="url(#arrow)"/>
+        <text x="282" y="183" fill="#4A90D9" font-size="10" text-anchor="middle" opacity="0.9">id → caseId</text>
+
+        <!-- case_payment_allocation → payment (direct) -->
+        <line x1="530" y1="190" x2="670" y2="190" stroke="#4A90D9" stroke-width="2" opacity="0.8" marker-end="url(#arrow)"/>
+        <text x="600" y="183" fill="#4A90D9" font-size="10" text-anchor="middle" opacity="0.9">paymentId → id</text>
+
+        <!-- case → organization (direct) -->
+        <line x1="160" y1="170" x2="160" y2="90" stroke="#27AE60" stroke-width="2" opacity="0.8" marker-end="url(#arrow-grn)"/>
+        <line x1="160" y1="90" x2="340" y2="55" stroke="#27AE60" stroke-width="2" opacity="0.8" marker-end="url(#arrow-grn)"/>
+        <text x="230" y="68" fill="#27AE60" font-size="10" opacity="0.9">initiatingPartyOrgId → id</text>
+
+        <!-- case → user (direct) -->
+        <line x1="170" y1="210" x2="170" y2="330" stroke="#9B59B6" stroke-width="1.5" opacity="0.7" stroke-dasharray="5,3" marker-end="url(#arrow-pur)"/>
+        <line x1="170" y1="330" x2="440" y2="355" stroke="#9B59B6" stroke-width="1.5" opacity="0.7" stroke-dasharray="5,3" marker-end="url(#arrow-pur)"/>
+        <text x="280" y="370" fill="#9B59B6" font-size="10" opacity="0.9">assignedToId → id</text>
+
+        <!-- user → payment (via) -->
+        <line x1="540" y1="355" x2="710" y2="225" stroke="#9B59B6" stroke-width="1.5" opacity="0.7" stroke-dasharray="5,3" marker-end="url(#arrow-pur)"/>
+        <text x="645" y="302" fill="#9B59B6" font-size="10" opacity="0.9">userId → id</text>
+
+        <!-- payment → invoice (direct) -->
+        <line x1="750" y1="175" x2="820" y2="80" stroke="#E67E22" stroke-width="2" opacity="0.8" marker-end="url(#arrow)"/>
+        <text x="805" y="135" fill="#E67E22" font-size="10" opacity="0.9" transform="rotate(-55 805 135)">invoiceId</text>
+
+        <!-- payment → bank_account -->
+        <line x1="750" y1="205" x2="820" y2="330" stroke="#E67E22" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <text x="808" y="280" fill="#E67E22" font-size="9" opacity="0.7">bankId</text>
+
+        <!-- ── TABLE NODES ── -->
+
+        <!-- case (central, highlighted) -->
+        <rect x="60" y="165" width="130" height="50" rx="10" fill="#4A90D920" stroke="#4A90D9" stroke-width="2" filter="url(#glow)"/>
+        <text x="125" y="187" fill="#4A90D9" font-size="13" font-weight="700" text-anchor="middle">`case`</text>
+        <text x="125" y="203" fill="#7a96c0" font-size="10" text-anchor="middle">41K rows · central table</text>
+
+        <!-- case_payment_allocation -->
+        <rect x="370" y="165" width="160" height="50" rx="10" fill="#22263a" stroke="#2e3350" stroke-width="1.5"/>
+        <text x="450" y="187" fill="#e8eaf0" font-size="12" font-weight="600" text-anchor="middle">`case_payment_allocation`</text>
+        <text x="450" y="203" fill="#7a82a0" font-size="10" text-anchor="middle">156K rows</text>
+
+        <!-- payment -->
+        <rect x="670" y="165" width="100" height="50" rx="10" fill="#22263a" stroke="#2e3350" stroke-width="1.5"/>
+        <text x="720" y="187" fill="#e8eaf0" font-size="12" font-weight="600" text-anchor="middle">`payment`</text>
+        <text x="720" y="203" fill="#7a82a0" font-size="10" text-anchor="middle">151K rows</text>
+
+        <!-- organization -->
+        <rect x="340" y="28" width="130" height="46" rx="10" fill="#22263a" stroke="#2e3350" stroke-width="1.5"/>
+        <text x="405" y="50" fill="#e8eaf0" font-size="12" font-weight="600" text-anchor="middle">`organization`</text>
+        <text x="405" y="64" fill="#7a82a0" font-size="10" text-anchor="middle">9.3K rows</text>
+
+        <!-- user (intermediate) -->
+        <rect x="440" y="330" width="100" height="44" rx="10" fill="#9B59B615" stroke="#9B59B644" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="490" y="352" fill="#9B59B6" font-size="12" font-weight="600" text-anchor="middle">`user`</text>
+        <text x="490" y="366" fill="#7a82a0" font-size="10" text-anchor="middle">intermediate</text>
+
+        <!-- invoice -->
+        <rect x="790" y="40" width="90" height="44" rx="10" fill="#22263a" stroke="#2e3350" stroke-width="1.5"/>
+        <text x="835" y="62" fill="#e8eaf0" font-size="12" font-weight="600" text-anchor="middle">`invoice`</text>
+        <text x="835" y="76" fill="#7a82a0" font-size="10" text-anchor="middle">60K rows</text>
+
+        <!-- bank_account -->
+        <rect x="790" y="315" width="100" height="44" rx="10" fill="#22263a" stroke="#2e3350" stroke-width="1.5"/>
+        <text x="840" y="337" fill="#e8eaf0" font-size="11" font-weight="600" text-anchor="middle">`bank_account`</text>
+        <text x="840" y="350" fill="#7a82a0" font-size="10" text-anchor="middle">6.7K rows</text>
+
+        <!-- legend -->
+        <g transform="translate(20, 370)">
+          <line x1="0" y1="8" x2="30" y2="8" stroke="#4A90D9" stroke-width="2" marker-end="url(#arrow)"/>
+          <text x="36" y="12" fill="#7a82a0" font-size="11">direct FK</text>
+          <line x1="100" y1="8" x2="130" y2="8" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-pur)"/>
+          <text x="136" y="12" fill="#7a82a0" font-size="11">via intermediate</text>
+          <rect x="248" y="2" width="12" height="12" rx="3" fill="#4A90D920" stroke="#4A90D9" stroke-width="1.5"/>
+          <text x="266" y="12" fill="#7a82a0" font-size="11">query entry point</text>
+        </g>
+      </svg>
+    </div>
+    <p style="margin-top:12px; font-size:12px; color:var(--muted); text-align:center;">
+      Simplified view showing key reporting tables. Full graph has 44 nodes and 83 edges.
+    </p>
+  </div>
+
+  <!-- ── Path examples ── -->
+  <div class="section">
+    <h2>BFS path resolution examples</h2>
+
+    <!-- Example 1: direct -->
+    <div class="card" style="margin-bottom:16px;">
+      <h3 style="color:var(--green); text-transform:none; font-size:13px; margin-bottom:12px;">
+        Direct FK (1 hop) — <code style="color:#a0ffb0">`case` → `case_payment_allocation`</code>
+      </h3>
+      <div class="path-row">
+        <div class="path-node start">case</div>
+        <div class="path-edge">
+          <span class="arrow">→</span>
+          <span class="label">id → caseId</span>
+        </div>
+        <div class="path-node end">case_payment_allocation</div>
+      </div>
+      <pre style="margin-top:14px;"><code><span class="hl-cmt">-- Emitted join hint:</span>
+<span class="hl-cmt">-- case ↔ case_payment_allocation  (direct FK)</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`case_payment_allocation`</span> <span class="hl-on">ON</span> <span class="hl-table">`case`</span>.<span class="hl-col">`id`</span> = <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`caseId`</span></code></pre>
+    </div>
+
+    <!-- Example 2: 2-hop -->
+    <div class="card" style="margin-bottom:16px;">
+      <h3 style="color:var(--accent); text-transform:none; font-size:13px; margin-bottom:12px;">
+        2-hop path — <code style="color:#a0c8ff">`case` → `payment`</code> via `case_payment_allocation`
+      </h3>
+      <div class="path-row">
+        <div class="path-node start">case</div>
+        <div class="path-edge">
+          <span class="arrow">→</span>
+          <span class="label">id → caseId</span>
+        </div>
+        <div class="path-node via">case_payment_allocation</div>
+        <div class="path-edge">
+          <span class="arrow">→</span>
+          <span class="label">paymentId → id</span>
+        </div>
+        <div class="path-node end">payment</div>
+      </div>
+      <pre style="margin-top:14px;"><code><span class="hl-cmt">-- Emitted join hints:</span>
+<span class="hl-cmt">-- case ↔ payment  (via `case_payment_allocation`)</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`case_payment_allocation`</span> <span class="hl-on">ON</span> <span class="hl-table">`case`</span>.<span class="hl-col">`id`</span> = <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`caseId`</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`payment`</span>                 <span class="hl-on">ON</span> <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`paymentId`</span> = <span class="hl-table">`payment`</span>.<span class="hl-col">`id`</span></code></pre>
+    </div>
+
+    <!-- Example 3: no path injected -->
+    <div class="card">
+      <h3 style="color:var(--muted); text-transform:none; font-size:13px; margin-bottom:8px;">
+        Path &gt; 2 hops — skipped (context stays clean)
+      </h3>
+      <p style="font-size:13px; color:var(--muted);">
+        Paths longer than 2 hops are deliberately excluded. Injecting long speculative chains would bloat the prompt and introduce noise — the LLM handles these rare cases with the table + FK column names already present in the schema context.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Algorithm ── -->
+  <div class="section">
+    <h2>How the algorithm works</h2>
+    <div class="algo-steps">
+      <div class="algo-step">
+        <div class="algo-num">1</div>
+        <div class="algo-content">
+          <div class="algo-title">Build bidirectional FK graph (once, on first import)</div>
+          <div class="algo-desc">Reads <code>schema_catalog.json</code>. For every FK entry <code>{column → references_table.references_column}</code>, adds two edges: forward (A→B) and reverse (B→A). Stored as a singleton dict in memory.</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">2</div>
+        <div class="algo-content">
+          <div class="algo-title">Schema Mapper returns top-K relevant tables</div>
+          <div class="algo-desc">ChromaDB vector search finds the 6 most semantically relevant tables for the user's query. This list is passed to the join graph.</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">3</div>
+        <div class="algo-content">
+          <div class="algo-title">All-pairs BFS on the matched tables (≤2 hops)</div>
+          <div class="algo-desc">For every pair (T1, T2) in the matched table list, BFS finds the shortest FK path. Paths with more than 2 hops are discarded to avoid noise.</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">4</div>
+        <div class="algo-content">
+          <div class="algo-title">Emit JOIN clause strings</div>
+          <div class="algo-desc">Each edge in the path becomes a <code>JOIN `table` ON `a`.`col` = `b`.`col`</code> string. Pairs are labelled as "direct FK" or "via `intermediate_table`".</div>
+        </div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-num">5</div>
+        <div class="algo-content">
+          <div class="algo-title">Append to schema_context in GraphState</div>
+          <div class="algo-desc">The join hint block is appended to the schema context string under the header <em>"Suggested JOIN paths between relevant tables"</em> and flows to the SQL Writer via GraphState.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Before / After schema context ── -->
+  <div class="section">
+    <h2>What the SQL Writer receives — before vs after</h2>
+    <div class="before-after">
+      <div class="ba-box">
+        <div class="ba-header before">✗ Before Story 1.3 — schema context only</div>
+        <div class="ba-body">
+<pre><code>Table: <span class="hl-table">case</span>
+Columns: id (int), assignedToId (int),
+  initiatingPartyOrganizationId (int), ...
+
+Table: <span class="hl-table">payment</span>
+Columns: id (int), userId (int),
+  amount (decimal), status (varchar), ...
+
+Table: <span class="hl-table">case_payment_allocation</span>
+Columns: id (int), caseId (int),
+  paymentId (int), ...
+
+<span class="hl-cmt">(LLM must infer joins from column names)</span></code></pre>
+        </div>
+      </div>
+      <div class="ba-box">
+        <div class="ba-header after">✓ After Story 1.3 — schema + join paths</div>
+        <div class="ba-body">
+<pre><code>Table: <span class="hl-table">case</span>
+Columns: id (int), assignedToId (int), ...
+
+Table: <span class="hl-table">payment</span>
+Columns: id (int), userId (int), ...
+
+Table: <span class="hl-table">case_payment_allocation</span>
+Columns: id (int), caseId (int), ...
+
+<span class="hl-cmt">=== Suggested JOIN paths ===</span>
+<span class="hl-cmt">-- case ↔ case_payment_allocation (direct FK)</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`case_payment_allocation`</span>
+  <span class="hl-on">ON</span> <span class="hl-table">`case`</span>.<span class="hl-col">`id`</span> = <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`caseId`</span>
+
+<span class="hl-cmt">-- case ↔ payment (via `case_payment_allocation`)</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`case_payment_allocation`</span>
+  <span class="hl-on">ON</span> <span class="hl-table">`case`</span>.<span class="hl-col">`id`</span> = <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`caseId`</span>
+<span class="hl-join">JOIN</span> <span class="hl-table">`payment`</span>
+  <span class="hl-on">ON</span> <span class="hl-table">`case_payment_allocation`</span>.<span class="hl-col">`paymentId`</span> = <span class="hl-table">`payment`</span>.<span class="hl-col">`id`</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── API reference ── -->
+  <div class="section">
+    <h2>Public API — <code style="font-size:15px; color:#a0c8ff">utils/join_graph.py</code></h2>
+
+    <div class="fn-card">
+      <div class="fn-header">get_join_path(start: str, end: str) → list[tuple] | None</div>
+      <div class="fn-body">
+        <div class="fn-row"><span class="fn-param">start</span><span class="fn-pdesc">Source table name (must exist in schema_catalog.json)</span></div>
+        <div class="fn-row"><span class="fn-param">end</span><span class="fn-pdesc">Target table name</span></div>
+        <div class="fn-returns">Returns <code>list[(from_table, from_col, to_table, to_col)]</code> — shortest BFS path of FK edges. Returns <code>None</code> if no path exists, <code>[]</code> if start == end.</div>
+      </div>
+    </div>
+
+    <div class="fn-card">
+      <div class="fn-header">get_join_context(table_names: list[str]) → str</div>
+      <div class="fn-body">
+        <div class="fn-row"><span class="fn-param">table_names</span><span class="fn-pdesc">List of tables returned by the schema mapper (top-K from ChromaDB)</span></div>
+        <div class="fn-returns">Returns a formatted string block with all ≤2-hop JOIN conditions between every pair. Returns <code>""</code> if no paths found. Intended to be appended directly to <code>schema_context</code> in GraphState.</div>
+      </div>
+    </div>
+
+    <div class="fn-card">
+      <div class="fn-header">get_graph_stats() → dict</div>
+      <div class="fn-body">
+        <div class="fn-returns">Returns <code>{"tables": int, "fk_edges": int}</code> — used by the Schema Mapper agent trace entry.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Files changed ── -->
+  <div class="section">
+    <h2>Files created / modified</h2>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div class="card" style="display:flex; align-items:center; gap:16px; padding:14px 20px;">
+        <span style="font-size:20px;">🆕</span>
+        <div>
+          <code style="color:#79C0FF; font-size:13px;">utils/join_graph.py</code>
+          <span style="color:var(--muted); font-size:12px; margin-left:12px;">Join graph builder · BFS traversal · context formatter</span>
+        </div>
+      </div>
+      <div class="card" style="display:flex; align-items:center; gap:16px; padding:14px 20px;">
+        <span style="font-size:20px;">✏️</span>
+        <div>
+          <code style="color:#79C0FF; font-size:13px;">agents/schema_mapper.py</code>
+          <span style="color:var(--muted); font-size:12px; margin-left:12px;">Calls get_join_context() · appends join hints to schema_context</span>
+        </div>
+      </div>
+      <div class="card" style="display:flex; align-items:center; gap:16px; padding:14px 20px;">
+        <span style="font-size:20px;">✏️</span>
+        <div>
+          <code style="color:#79C0FF; font-size:13px;">state/context.py</code>
+          <span style="color:var(--muted); font-size:12px; margin-left:12px;">agent_trace type changed from List[str] to List[Dict] for structured trace</span>
+        </div>
+      </div>
+      <div class="card" style="display:flex; align-items:center; gap:16px; padding:14px 20px;">
+        <span style="font-size:20px;">✏️</span>
+        <div>
+          <code style="color:#79C0FF; font-size:13px;">agents / (all 5)</code>
+          <span style="color:var(--muted); font-size:12px; margin-left:12px;">All agents emit structured {agent, status, summary, detail} trace dicts</span>
+        </div>
+      </div>
+      <div class="card" style="display:flex; align-items:center; gap:16px; padding:14px 20px;">
+        <span style="font-size:20px;">✏️</span>
+        <div>
+          <code style="color:#79C0FF; font-size:13px;">app.py</code>
+          <span style="color:var(--muted); font-size:12px; margin-left:12px;">render_agent_trace() — visual pipeline timeline with icons, status badges, connector lines</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:40px;">
+    IDRE Reports Bot · Epic 1 / Story 1.3 · Join Graph Utility · March 2026
+  </p>
+
+</div>
+</body>
+</html>
