@@ -1,0 +1,95 @@
+{
+  "version": "v6.0",
+  "templates": [
+    {
+      "id": "case_count_by_status",
+      "name": "Case count by status",
+      "description": "Count of cases grouped by their current status",
+      "pattern_keywords": ["case", "count", "status", "breakdown"],
+      "sql": "SELECT `case`.`status`, COUNT(*) AS case_count FROM `case` WHERE `case`.`status` NOT IN ('REMOVED') GROUP BY `case`.`status` ORDER BY case_count DESC",
+      "parameters": [],
+      "tables": ["case"]
+    },
+    {
+      "id": "cases_by_date_range",
+      "name": "Cases created in date range",
+      "description": "List cases created within a specific date range",
+      "pattern_keywords": ["case", "created", "date", "range", "between", "since", "last"],
+      "sql": "SELECT `case`.`id`, `case`.`shortId`, `case`.`status`, `case`.`typeOfDispute`, `case`.`createdAt` FROM `case` WHERE `case`.`createdAt` >= {start_date} AND `case`.`createdAt` < {end_date} ORDER BY `case`.`createdAt` DESC",
+      "parameters": ["start_date", "end_date"],
+      "tables": ["case"]
+    },
+    {
+      "id": "payment_summary_by_type",
+      "name": "Payment summary by type",
+      "description": "Total payment amounts grouped by payment type",
+      "pattern_keywords": ["payment", "total", "amount", "type", "summary"],
+      "sql": "SELECT p.`type`, COUNT(*) AS payment_count, SUM(p.`amount`) AS total_amount FROM `payment` p WHERE p.`status` != 'REMOVED' GROUP BY p.`type` ORDER BY total_amount DESC",
+      "parameters": [],
+      "tables": ["payment"]
+    },
+    {
+      "id": "overdue_cases",
+      "name": "Overdue cases",
+      "description": "Cases past their due date that are still open",
+      "pattern_keywords": ["overdue", "due", "past due", "late", "deadline"],
+      "sql": "SELECT `case`.`id`, `case`.`shortId`, `case`.`status`, `case`.`typeOfDispute`, `case`.`primaryDueDate`, `case`.`createdAt` FROM `case` WHERE `case`.`primaryDueDate` < CURDATE() AND `case`.`status` NOT IN ('CLOSED_DEFAULT','CLOSED_INITIATING_PARTY','CLOSED_NON_INITIATING_PARTY','CLOSED_ADMINISTRATIVE','CLOSED_SPLIT_DECISION','NOTICE_OF_DISMISSAL_NON_PAYMENT','INELIGIBLE') ORDER BY `case`.`primaryDueDate` ASC",
+      "parameters": [],
+      "tables": ["case"]
+    },
+    {
+      "id": "cases_by_organization",
+      "name": "Cases by organization",
+      "description": "Count of cases per organization",
+      "pattern_keywords": ["organization", "org", "provider", "health plan", "insurer", "cases per"],
+      "sql": "SELECT o.`name` AS organization_name, o.`type` AS org_type, COUNT(cp.`caseId`) AS case_count FROM `organization` o JOIN `case_party` cp ON cp.`organizationId` = o.`id` GROUP BY o.`id`, o.`name`, o.`type` ORDER BY case_count DESC",
+      "parameters": [],
+      "tables": ["organization", "case_party"]
+    },
+    {
+      "id": "monthly_case_trend",
+      "name": "Monthly case creation trend",
+      "description": "Number of cases created per month",
+      "pattern_keywords": ["monthly", "trend", "over time", "per month", "by month"],
+      "sql": "SELECT DATE_FORMAT(`case`.`createdAt`, '%Y-%m') AS month, COUNT(*) AS case_count FROM `case` WHERE `case`.`createdAt` >= DATE_SUB(CURDATE(), INTERVAL {months} MONTH) GROUP BY month ORDER BY month",
+      "parameters": ["months"],
+      "tables": ["case"]
+    },
+    {
+      "id": "payment_by_case",
+      "name": "Payments for a specific case",
+      "description": "All payments associated with a particular case",
+      "pattern_keywords": ["payment", "case", "specific", "DISP-"],
+      "sql": "SELECT p.`id`, p.`type`, p.`amount`, p.`status`, p.`direction`, p.`createdAt` FROM `payment` p JOIN `case_payment_allocation` cpa ON cpa.`paymentId` = p.`id` WHERE cpa.`caseId` = {case_id} ORDER BY p.`createdAt` DESC",
+      "parameters": ["case_id"],
+      "tables": ["payment", "case_payment_allocation"]
+    },
+    {
+      "id": "arbitrator_caseload",
+      "name": "Arbitrator caseload",
+      "description": "Number of cases assigned to each arbitrator",
+      "pattern_keywords": ["arbitrator", "caseload", "assigned", "workload"],
+      "sql": "SELECT u.`firstName`, u.`lastName`, COUNT(ca.`caseId`) AS assigned_cases FROM `user` u JOIN `case_arbitrator` ca ON ca.`userId` = u.`id` WHERE ca.`status` = 'ACTIVE' GROUP BY u.`id`, u.`firstName`, u.`lastName` ORDER BY assigned_cases DESC",
+      "parameters": [],
+      "tables": ["user", "case_arbitrator"]
+    },
+    {
+      "id": "eligibility_review_queue",
+      "name": "Eligibility review queue",
+      "description": "Cases currently in eligibility review status",
+      "pattern_keywords": ["eligibility", "review", "queue", "pending", "rfi"],
+      "sql": "SELECT `case`.`id`, `case`.`shortId`, `case`.`typeOfDispute`, `case`.`status`, `case`.`createdAt`, `case`.`eligibilityDueDate` FROM `case` WHERE `case`.`status` IN ('INITIAL_ELIGIBILITY_REVIEW', 'PENDING_RFI_RESPONSE') ORDER BY `case`.`eligibilityDueDate` ASC",
+      "parameters": [],
+      "tables": ["case"]
+    },
+    {
+      "id": "ip_nip_payment_status",
+      "name": "IP/NIP payment status per case",
+      "description": "Payment totals for initiating and non-initiating parties",
+      "pattern_keywords": ["ip", "nip", "initiating", "party", "paid", "payment status"],
+      "sql": "SELECT c.`shortId`, c.`typeOfDispute`, c.`status`, COALESCE(SUM(CASE WHEN cp.`partyType` = 'INITIATING_PARTY' THEN p.`amount` END), 0) AS ip_total_paid, COALESCE(SUM(CASE WHEN cp.`partyType` = 'NON_INITIATING_PARTY' THEN p.`amount` END), 0) AS nip_total_paid FROM `case` c LEFT JOIN `case_party` cp ON cp.`caseId` = c.`id` LEFT JOIN `case_payment_allocation` cpa ON cpa.`caseId` = c.`id` LEFT JOIN `payment` p ON p.`id` = cpa.`paymentId` AND p.`type` = 'CASE_PAYMENT' AND p.`status` = 'COMPLETED' GROUP BY c.`id`, c.`shortId`, c.`typeOfDispute`, c.`status` ORDER BY c.`createdAt` DESC",
+      "parameters": [],
+      "tables": ["case", "case_party", "case_payment_allocation", "payment"]
+    }
+  ]
+}
