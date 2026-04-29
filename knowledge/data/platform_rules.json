@@ -1,0 +1,305 @@
+{
+  "version": "2.0",
+  "platform_summary": "IDRE (Independent Dispute Resolution Entity) is a healthcare dispute resolution platform under the No Surprises Act. It manages disputes between healthcare providers (initiating parties) and health plans (non-initiating parties). Cases go through eligibility review, payment collection, RFI, arbitration, and closure. The platform handles payments via ACH/NACHA, tracks invoices, manages refunds, and generates 13+ standard reports.",
+
+  "case_statuses": {
+    "INITIAL_ELIGIBILITY_REVIEW": "First-stage human review queue — case enters system, eligibility specialist reviews basic qualification",
+    "PENDING_PAYMENTS": "First payment collection phase — both parties have 10 business days to pay entity fees",
+    "PENDING_SECOND_PAYMENT": "One party has paid, waiting for the second party's payment",
+    "FINAL_ELIGIBILITY_REVIEW": "Both parties paid (P=2) — specialist performs final eligibility check",
+    "PENDING_INITIAL_RFI": "Initial Request for Information sent to parties for additional documentation",
+    "PENDING_RFI": "Subsequent RFI request — 5 business days for response",
+    "FINAL_ELIGIBILITY_COMPLETED": "Passed final eligibility — ready for arbitrator assignment",
+    "FINAL_DETERMINATION_PENDING": "Assigned to arbitrator — decision being deliberated",
+    "FINAL_DETERMINATION_RENDERED": "Arbitrator has issued a binding decision",
+    "PENDING_CLOSURE_PAYMENTS": "Post-decision — refunds and internal payouts being processed",
+    "PENDING_ADMINISTRATIVE_CLOSURE": "Flagged by admin for manual closure",
+    "INELIGIBLE_PENDING_ADMIN_FEE": "Failed eligibility but $115 admin fee still needs to be collected",
+    "INELIGIBLE": "Terminal — case did not qualify for IDR process",
+    "CLOSED_INITIATING_PARTY": "Terminal — initiating party (provider) won the arbitration",
+    "CLOSED_NON_INITIATING_PARTY": "Terminal — non-initiating party (health plan) won",
+    "CLOSED_SPLIT_DECISION": "Terminal — split decision, award divided between both parties",
+    "CLOSED_DEFAULT": "Terminal — closed due to non-payment (legacy status)",
+    "CLOSED_DEFAULT_IP": "Terminal — initiating party defaulted on payment",
+    "CLOSED_DEFAULT_NIP": "Terminal — non-initiating party defaulted on payment",
+    "CLOSED_ADMINISTRATIVE": "Terminal — closed by admin action after both parties paid",
+    "NOTICE_OF_DISMISSAL_NON_PAYMENT": "Terminal — both parties failed to pay, case dismissed",
+    "PAYBACK_REQUEST": "Refund correction state — overpayment being recovered",
+    "REOPENED_FOR_CORRECTION": "Case reopened to correct a prior determination"
+  },
+
+  "payment_rules": {
+    "payment_statuses": {
+      "PENDING": "Created, awaiting processing",
+      "ON_HOLD": "Blocked from processing",
+      "APPROVED": "Approved for ACH transmission (committed funds)",
+      "COMPLETED": "Successfully received/processed",
+      "CANCELLED": "Cancelled by user",
+      "FAILED": "Processing failed"
+    },
+    "payment_types": {
+      "CASE_PAYMENT": "Party's case fee payment (incoming)",
+      "REFUND_TO_PREVAILING_PARTY": "Entity fee refund to winning party (outgoing)",
+      "PARTY_REFUND_IP": "Refund to initiating party",
+      "PARTY_REFUND_NIP": "Refund to non-initiating party",
+      "CAPITOL_BRIDGE_FEE": "Internal payout to Capitol Bridge",
+      "THIRD_PARTY_PAYMENT": "Internal payout to Halo or VeraTru",
+      "CMS_INVOICE_PAYMENT": "CMS fee payment",
+      "CMS_ADMIN_FEE_TRANSFER": "CMS admin fee transfer"
+    },
+    "payment_directions": {
+      "INCOMING": "Payments received from parties",
+      "OUTGOING": "Payments sent to parties or internal payees"
+    },
+    "pricing_single_bundled": {
+      "entity_fee_per_party": "$595.00",
+      "cms_admin_fee_per_party": "$115.00",
+      "total_per_party": "$710.00"
+    },
+    "pricing_batched": {
+      "entity_fee_per_party": "$795.00",
+      "cms_admin_fee_per_party": "$115.00",
+      "base_total_per_party": "$910.00",
+      "additional_surcharge": "$150.00 per additional 25 line items beyond 25",
+      "formula": "$910 + ceil((lineItems - 25) / 25) x $150"
+    },
+    "refund_amounts": {
+      "single_bundled_full": "$595.00 (full entity fee to winning party)",
+      "split_decision": "$297.50 (50% of entity fee to each party)"
+    },
+    "internal_payouts_single_bundled": {
+      "halo": "$55.00",
+      "capitol_bridge": "$345.00",
+      "veratru": "$195.00"
+    },
+    "internal_payouts_batched": {
+      "halo": "$65.00",
+      "veratru": "$235.00",
+      "capitol_bridge_tiered": "1-25 items: $495, 26-50: $645, 51-75: $795, 76-100: $945, etc."
+    },
+    "due_dates": {
+      "initial_payment_due": "3 business days from case creation",
+      "payment_collection_period": "10 business days from PENDING_PAYMENTS status",
+      "payment_reminders": "Sent on business days 6 and 9",
+      "rfi_response_period": "5 business days from PENDING_RFI status",
+      "decision_deadline": "30 business days from case creation (due_date_until_decision)"
+    },
+    "collection_statuses": {
+      "NONE": "No collection required",
+      "INVOICE_SENT": "Invoice generated and sent",
+      "AWAITING_PAYMENT": "Waiting for payment",
+      "RESOLVED": "Payment received"
+    },
+    "invoice_statuses": {
+      "PENDING": "Created, not sent",
+      "SENT": "Sent to party",
+      "PAID": "Payment received",
+      "OVERDUE": "Past due date",
+      "CANCELLED": "Cancelled"
+    },
+    "payment_variance_types": {
+      "OVERPAYMENT": "Actual paid > expected amount — refund may be needed",
+      "UNDERPAYMENT": "Actual paid < expected amount — collection needed",
+      "EXACT": "Paid exactly the expected amount"
+    }
+  },
+
+  "dispute_types": {
+    "SINGLE": "1 line item — $710 total per party ($595 entity + $115 CMS)",
+    "BUNDLED": "2+ line items (not batched) — same pricing as SINGLE",
+    "BATCHED": "2-25+ line items explicitly batched — $910 base + surcharges per additional 25 items"
+  },
+
+  "party_types": {
+    "INITIATING": "The party that filed the dispute (typically healthcare provider)",
+    "NON_INITIATING": "The responding party (typically health plan/insurer)",
+    "PROVIDER": "Healthcare provider organization",
+    "HEALTH_PLAN": "Health plan / insurance organization"
+  },
+
+  "arbitration_rules": {
+    "decision_types": "CASE_LEVEL (single award for entire case) or LINE_ITEM_LEVEL (per line item)",
+    "award_recipients": "INITIATING_PARTY, NON_INITIATING_PARTY, or SPLIT_DECISION",
+    "case_closure_after_decision": "IP wins → CLOSED_INITIATING_PARTY, NIP wins → CLOSED_NON_INITIATING_PARTY, Split → CLOSED_SPLIT_DECISION",
+    "correction_workflow": "Cases can be reopened (REOPENED_FOR_CORRECTION) before refunds complete — all pending refunds deleted, new determination rendered",
+    "arbitrator_assignment": "Arbitrators self-assign from cases in FINAL_ELIGIBILITY_COMPLETED or FINAL_DETERMINATION_PENDING"
+  },
+
+  "closure_reasons": {
+    "EARLY_INELIGIBLE": "Early closure — failed initial eligibility",
+    "EARLY_RESUBMISSION": "Early closure — party chose to resubmit",
+    "EARLY_WITHDRAWAL": "Early closure — party withdrew",
+    "EARLY_SETTLEMENT": "Early closure — parties settled outside IDR",
+    "SETTLEMENT": "Settled after eligibility",
+    "WITHDRAWAL": "Withdrawn after eligibility",
+    "DISMISSAL": "Dismissed by adjudicator",
+    "OTHER_ADMIN": "Other administrative reason"
+  },
+
+  "rfi_statuses": {
+    "NOT_REQUESTED": "No RFI has been sent",
+    "REQUESTED": "RFI sent, awaiting response",
+    "RECEIVED": "RFI response received",
+    "REVIEWED": "RFI response reviewed"
+  },
+
+  "bank_account_statuses": {
+    "PENDING": "Account added, awaiting verification",
+    "APPROVED": "Verified and approved for transactions",
+    "REJECTED": "Verification failed",
+    "REQUIRES_VERIFICATION": "Additional verification needed"
+  },
+
+  "calculations": {
+    "processing_time_days": "CEIL((case.statusChangedAt - case.createdAt) / 86400000) — time from creation to current status in days",
+    "average_processing_time": "SUM(processing_time for all cases) / COUNT(cases)",
+    "case_balance": "SUM(payment_allocations where status IN ['COMPLETED','APPROVED']) - SUM(refunds where status='COMPLETED')",
+    "payment_variance": "actual_paid - expected_amount (positive = overpayment, negative = underpayment)",
+    "team_performance_cases_resolved": "COUNT(cases in CLOSED_* or FINAL_DETERMINATION_RENDERED statuses)",
+    "team_performance_return_rate": "(COUNT(returned cases) / COUNT(assigned cases)) * 100",
+    "urgency_scoring": "Overdue = due_date < NOW(), Urgent = due_date within 2 business days, Warning = within 5 business days"
+  },
+
+  "existing_reports": [
+    {
+      "name": "Case Analytics",
+      "description": "Case volume trends, status duration, resolution time, outcome analysis",
+      "key_metrics": ["total_cases", "cases_by_status", "average_processing_time", "outcome_distribution"],
+      "api_route": "/api/reports/case-analytics"
+    },
+    {
+      "name": "Case Balance",
+      "description": "Financial balance of each case as of a specific date — payments received minus refunds issued",
+      "key_metrics": ["case_balance", "total_allocated", "total_refunded"],
+      "api_route": "/api/reports/case-balance",
+      "restricted_roles": ["accounting", "payment-admin", "payment-specialist", "master-admin"]
+    },
+    {
+      "name": "CMS Payments Analytics",
+      "description": "CMS payment amounts, case correlations, processing timeline trends",
+      "key_metrics": ["cms_payment_total", "payment_by_case_type", "processing_timeline"],
+      "api_route": "/api/reports/cms-payments"
+    },
+    {
+      "name": "Daily Funds Incoming",
+      "description": "Daily reconciliation of incoming payments and invoices",
+      "key_metrics": ["daily_incoming_total", "payment_count", "invoice_reconciliation"],
+      "api_route": "/api/reports/auditing/daily-funds"
+    },
+    {
+      "name": "Daily Funds Outgoing",
+      "description": "Daily reconciliation of outgoing disbursements and payouts",
+      "key_metrics": ["daily_outgoing_total", "disbursement_count", "payout_breakdown"],
+      "api_route": "/api/reports/auditing/daily-funds"
+    },
+    {
+      "name": "Daily Transactions",
+      "description": "Transaction-level detail with 7-digit IDs for QuickBooks integration",
+      "key_metrics": ["transaction_id", "amount", "type", "timestamp"],
+      "api_route": "/api/reports/auditing/daily-transactions",
+      "restricted_roles": ["accounting", "payment-admin", "payment-specialist", "master-admin"]
+    },
+    {
+      "name": "Due Dates",
+      "description": "Tracks case deadlines, overdue cases, urgency scoring, workload management",
+      "key_metrics": ["total_cases", "overdue_count", "urgent_count", "days_until_due"],
+      "api_route": "/api/reports/due-dates"
+    },
+    {
+      "name": "IDRE Payouts",
+      "description": "Internal fee payouts to Halo, VeraTru, Capitol Bridge by dispute",
+      "key_metrics": ["payee", "dispute_id", "amount", "date_completed"],
+      "api_route": "/api/reports/idre-payouts"
+    },
+    {
+      "name": "Outstanding Payments",
+      "description": "Disputes eligible for payment but not yet paid — tracking owed amounts",
+      "key_metrics": ["dispute_id", "organization", "owed_amount", "payment_status"],
+      "api_route": "/api/reports/outstanding-payments"
+    },
+    {
+      "name": "Payment Variance",
+      "description": "Overpayments and underpayments needing refunds or collections",
+      "key_metrics": ["variance_amount", "variance_type", "case_id", "party"],
+      "api_route": "/api/reports/payment-variance"
+    },
+    {
+      "name": "Team Performance",
+      "description": "Arbitrator and staff productivity — cases resolved, resolution time, workload",
+      "key_metrics": ["user", "cases_assigned", "cases_resolved", "avg_resolution_time", "return_rate"],
+      "api_route": "/api/reports/team-performance"
+    },
+    {
+      "name": "Unpaid Disputes",
+      "description": "Cases where at least one party hasn't paid — tracks payment status per party",
+      "key_metrics": ["dispute_id", "organization", "ip_payment_status", "nip_payment_status"],
+      "api_route": "/api/reports/unpaid-disputes"
+    },
+    {
+      "name": "Dashboard Stats",
+      "description": "Quick stats: total cases, total payments, avg processing time, active arbitrators",
+      "key_metrics": ["total_cases", "total_payments", "avg_processing_time", "active_arbitrators"],
+      "api_route": "/api/reports/dashboard-stats"
+    }
+  ],
+
+  "platform_roles": {
+    "master-admin": "Full system access — all reports, user management, all tables",
+    "payment-admin": "Payment and financial administration — all financial reports",
+    "payment-specialist": "Payment processing — financial reports",
+    "accounting": "Accounting/finance — case balance, daily transactions",
+    "admin-support": "Case management, eligibility support, payment collections",
+    "eligibility-specialist": "Eligibility review and case qualification",
+    "arbitrator": "Renders decisions on cases — can self-assign from eligible cases",
+    "arbitrator-manager": "Manages arbitrator team — team performance reports",
+    "capitol-bridge-admin": "Capitol Bridge fund management — outstanding payments",
+    "vt-support": "VeraTru support — select reports",
+    "view-only": "Read-only access to approved reports"
+  },
+
+  "organization_rules": {
+    "types": "AGGREGATOR or PROVIDER",
+    "case_parties": "Each case has an initiatingPartyOrganization (who filed) and nonInitiatingPartyOrganization (respondent)",
+    "case_ownership": "ownedByOrganization = the organization that manages/owns the case",
+    "members": "Organizations have members with roles: owner, admin, member",
+    "bank_accounts": "Each org can have multiple bank accounts, each requiring approval workflow"
+  },
+
+  "document_types": [
+    "PROOF_OF_OPEN_NEGOTIATION",
+    "QUALIFYING_PAYMENT_DOCUMENTATION",
+    "NOTICE_OF_INITIATION",
+    "NOTICE_OF_OFFER",
+    "NPI_DOCUMENTATION",
+    "TIN_DOCUMENTATION",
+    "DOLLAR_VALUE_DOCUMENTATION",
+    "RFI_RESPONSE",
+    "OTHER"
+  ],
+
+  "email_types": [
+    "idr-admin-fee-request",
+    "idr-non-payment-both",
+    "idr-payment-confirmation",
+    "idr-non-payment-one",
+    "idr-reissued-payment-request",
+    "idr-payment-reminder-1 (business day 6)",
+    "idr-payment-reminder-2 (business day 9)",
+    "idr-entity-fee-refund",
+    "idr-underpayment-invoice",
+    "idr-final-determination",
+    "idr-determination-corrected"
+  ],
+
+  "key_table_relationships": {
+    "case_to_payments": "case → case_payment_allocation (caseId) → payment (paymentId) — tracks which payments fund which cases",
+    "case_to_parties": "case → case_party (caseId) — links organizations as IP or NIP for a case",
+    "case_to_decisions": "case → arbitration_decision (caseId) — one decision per case; line_item_decision for per-item decisions",
+    "case_to_refunds": "case → case_refunds (caseId) — refund records tied to case outcomes",
+    "case_to_actions": "case → case_action (caseId) — audit trail of all status changes and events",
+    "case_to_invoices": "case → invoice_item (caseId) → invoice — billing for case fees",
+    "payment_to_bank": "payment → bank_account (incomingBankAccountId or outgoingBankAccountId)",
+    "payment_to_nacha": "payment → nacha_batch (nachaBatchId) — ACH batch processing",
+    "organization_to_members": "organization → member (organizationId) — org membership"
+  }
+}
