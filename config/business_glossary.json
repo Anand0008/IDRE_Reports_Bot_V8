@@ -1,0 +1,1530 @@
+{
+  "version": "2.1",
+  "description": "IDRE dispute domain glossary v2 — comprehensive mapping of business terms to SQL filter fragments. Expanded with full platform knowledge including all statuses, payment types, pricing, roles, and report concepts.",
+  "terms": [
+    {
+      "term": "open case",
+      "aliases": [
+        "open cases",
+        "active case",
+        "active cases",
+        "active dispute",
+        "active disputes",
+        "open dispute",
+        "open disputes",
+        "ongoing case",
+        "ongoing cases",
+        "live cases",
+        "live disputes",
+        "cases in progress",
+        "not closed",
+        "not yet closed"
+      ],
+      "definition": "A dispute that has not yet reached any terminal closed or ineligible state",
+      "sql_filter": "`case`.status NOT IN ('CLOSED_DEFAULT', 'CLOSED_INITIATING_PARTY', 'CLOSED_NON_INITIATING_PARTY', 'CLOSED_ADMINISTRATIVE', 'CLOSED_SPLIT_DECISION', 'NOTICE_OF_DISMISSAL_NON_PAYMENT', 'CLOSED_DEFAULT_IP', 'CLOSED_DEFAULT_NIP', 'INELIGIBLE')",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "closed case",
+      "aliases": [
+        "closed cases",
+        "closed dispute",
+        "closed disputes",
+        "terminated case",
+        "terminated cases",
+        "resolved case",
+        "resolved cases",
+        "finalized dispute",
+        "finalized cases",
+        "all closed",
+        "total closed"
+      ],
+      "definition": "A dispute in any terminal closed state",
+      "sql_filter": "`case`.status IN ('CLOSED_DEFAULT', 'CLOSED_INITIATING_PARTY', 'CLOSED_NON_INITIATING_PARTY', 'CLOSED_ADMINISTRATIVE', 'CLOSED_SPLIT_DECISION', 'NOTICE_OF_DISMISSAL_NON_PAYMENT', 'CLOSED_DEFAULT_IP', 'CLOSED_DEFAULT_NIP')",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "initial eligibility review",
+      "aliases": [
+        "initial eligibility",
+        "initial review",
+        "triage",
+        "first review",
+        "intake review",
+        "initial screening",
+        "initial eligibility queue",
+        "new cases in review"
+      ],
+      "definition": "Cases currently in the first-stage human review queue before any RFI or payment step",
+      "sql_filter": "`case`.status = 'INITIAL_ELIGIBILITY_REVIEW'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "RFI",
+      "aliases": [
+        "pending RFI",
+        "request for information",
+        "awaiting documents",
+        "waiting for info",
+        "document request",
+        "information request",
+        "pending information",
+        "pending documents",
+        "RFI pending",
+        "RFI cases"
+      ],
+      "definition": "Cases awaiting documentation or information from one or more parties before processing can continue",
+      "sql_filter": "`case`.status IN ('PENDING_RFI', 'PENDING_INITIAL_RFI')",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "initial RFI",
+      "aliases": [
+        "first RFI",
+        "pending initial RFI",
+        "initial document request"
+      ],
+      "definition": "Cases in the first RFI phase — initial request for additional documentation",
+      "sql_filter": "`case`.status = 'PENDING_INITIAL_RFI'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "pending payment",
+      "aliases": [
+        "payment pending",
+        "awaiting payment",
+        "unpaid cases",
+        "no payment received",
+        "zero payments",
+        "P=0",
+        "waiting for payment",
+        "payment not received"
+      ],
+      "definition": "Cases in PENDING_PAYMENTS status where no completed payments have been received from either party (P=0)",
+      "sql_filter": "`case`.status = 'PENDING_PAYMENTS' AND `case`.id NOT IN (SELECT cpa.caseId FROM `case_payment_allocation` cpa JOIN `payment` p ON cpa.paymentId = p.id WHERE p.status = 'COMPLETED')",
+      "applies_to_tables": [
+        "case",
+        "case_payment_allocation",
+        "payment"
+      ],
+      "requires_join": true,
+      "join_table": "case_payment_allocation",
+      "category": "payment_lifecycle"
+    },
+    {
+      "term": "pending second payment",
+      "aliases": [
+        "second payment pending",
+        "one party paid",
+        "half paid",
+        "P=1",
+        "one payment received",
+        "awaiting second payment",
+        "first payment received",
+        "partial payment"
+      ],
+      "definition": "Cases where exactly one party has submitted a completed payment and the second payment is still outstanding (P=1)",
+      "sql_filter": "`case`.status IN ('PENDING_PAYMENTS', 'PENDING_RFI', 'PENDING_SECOND_PAYMENT') AND (SELECT COUNT(*) FROM `case_payment_allocation` cpa JOIN `payment` p ON cpa.paymentId = p.id WHERE cpa.caseId = `case`.id AND p.status = 'COMPLETED') = 1",
+      "applies_to_tables": [
+        "case",
+        "case_payment_allocation",
+        "payment"
+      ],
+      "requires_join": true,
+      "join_table": "case_payment_allocation",
+      "category": "payment_lifecycle"
+    },
+    {
+      "term": "both parties paid",
+      "aliases": [
+        "both paid",
+        "P=2",
+        "two payments received",
+        "full payment",
+        "fully paid cases"
+      ],
+      "definition": "Cases where both parties have submitted completed payments",
+      "sql_filter": "`case`.id IN (SELECT cpa.caseId FROM `case_payment_allocation` cpa JOIN `payment` p ON cpa.paymentId = p.id WHERE p.status = 'COMPLETED' GROUP BY cpa.caseId HAVING COUNT(DISTINCT cpa.partyType) = 2)",
+      "applies_to_tables": [
+        "case",
+        "case_payment_allocation",
+        "payment"
+      ],
+      "requires_join": true,
+      "join_table": "case_payment_allocation",
+      "category": "payment_lifecycle"
+    },
+    {
+      "term": "final eligibility review",
+      "aliases": [
+        "post-payment review",
+        "final review",
+        "eligibility check after payment"
+      ],
+      "definition": "Cases in final eligibility review after both parties paid",
+      "sql_filter": "`case`.status = 'FINAL_ELIGIBILITY_REVIEW'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "final eligibility completed",
+      "aliases": [
+        "eligibility completed",
+        "ready for arbitrator",
+        "passed eligibility",
+        "eligibility passed",
+        "awaiting arbitrator assignment",
+        "arbitrator assignment pending",
+        "post-eligibility"
+      ],
+      "definition": "Cases that passed final eligibility review and are ready to be assigned to an arbitrator",
+      "sql_filter": "`case`.status = 'FINAL_ELIGIBILITY_COMPLETED'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "final determination pending",
+      "aliases": [
+        "determination pending",
+        "with arbitrator",
+        "arbitrator reviewing",
+        "under arbitrator review",
+        "arbiter active",
+        "arbiter pending",
+        "assigned to arbitrator",
+        "arbitration in progress"
+      ],
+      "definition": "Cases currently assigned to and under review by an arbitrator",
+      "sql_filter": "`case`.status = 'FINAL_DETERMINATION_PENDING'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "final determination rendered",
+      "aliases": [
+        "determination rendered",
+        "completed dispute",
+        "decided case",
+        "decision issued",
+        "arbitration complete",
+        "result issued",
+        "case decided",
+        "cases with a decision",
+        "finished cases",
+        "resolved by arbitration"
+      ],
+      "definition": "Cases where the arbitrator has issued a final binding decision",
+      "sql_filter": "`case`.status = 'FINAL_DETERMINATION_RENDERED'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "ineligible pending admin fee",
+      "aliases": [
+        "ineligible fee pending",
+        "admin fee owed",
+        "admin fee pending",
+        "$115 fee",
+        "admin fee outstanding",
+        "fee not collected",
+        "ineligible with fee",
+        "pending $115"
+      ],
+      "definition": "Cases that failed eligibility but still require the $115 admin fee before closure",
+      "sql_filter": "`case`.status = 'INELIGIBLE_PENDING_ADMIN_FEE'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "ineligible",
+      "aliases": [
+        "failed eligibility",
+        "disqualified",
+        "not eligible",
+        "ineligible cases",
+        "ineligible disputes",
+        "eligibility failed",
+        "did not qualify",
+        "rejected cases"
+      ],
+      "definition": "Cases in the terminal ineligible state",
+      "sql_filter": "`case`.status = 'INELIGIBLE'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "pending closure payments",
+      "aliases": [
+        "closure payments pending",
+        "pending payout",
+        "awaiting disbursement",
+        "payout processing",
+        "final disbursement",
+        "closure payout",
+        "disbursement pending"
+      ],
+      "definition": "Cases in the final payout processing stage — arbitration complete, disbursements being processed",
+      "sql_filter": "`case`.status = 'PENDING_CLOSURE_PAYMENTS'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "pending admin closure",
+      "aliases": [
+        "administrative closure pending",
+        "pending administrative closure",
+        "flagged for closure",
+        "admin flagged",
+        "manual closure pending"
+      ],
+      "definition": "Cases flagged by administrators for manual termination",
+      "sql_filter": "`case`.status = 'PENDING_ADMINISTRATIVE_CLOSURE'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "default closure",
+      "aliases": [
+        "closed by default",
+        "non-payment default",
+        "default case",
+        "defaulted",
+        "closed default",
+        "default closures",
+        "non-payment closure",
+        "payment default",
+        "IP default",
+        "NIP default",
+        "defaults"
+      ],
+      "definition": "Cases closed because one or both parties failed to pay",
+      "sql_filter": "`case`.status IN ('CLOSED_DEFAULT_IP', 'CLOSED_DEFAULT_NIP', 'CLOSED_DEFAULT')",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "IP default",
+      "aliases": [
+        "initiating party default",
+        "IP non-payment",
+        "provider default"
+      ],
+      "definition": "Cases closed because the initiating party failed to pay",
+      "sql_filter": "`case`.status = 'CLOSED_DEFAULT_IP'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "NIP default",
+      "aliases": [
+        "non-initiating party default",
+        "NIP non-payment",
+        "health plan default",
+        "insurer default"
+      ],
+      "definition": "Cases closed because the non-initiating party failed to pay",
+      "sql_filter": "`case`.status = 'CLOSED_DEFAULT_NIP'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "split decision",
+      "aliases": [
+        "closed split decision",
+        "split ruling",
+        "split outcome",
+        "split award",
+        "partial ruling",
+        "neither party won"
+      ],
+      "definition": "Cases closed with a split decision where the award was divided between parties",
+      "sql_filter": "`case`.status = 'CLOSED_SPLIT_DECISION'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "IP won",
+      "aliases": [
+        "initiating party won",
+        "provider won",
+        "closed initiating party",
+        "IP victory",
+        "IP wins"
+      ],
+      "definition": "Cases where the initiating party won the arbitration",
+      "sql_filter": "`case`.status = 'CLOSED_INITIATING_PARTY'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "NIP won",
+      "aliases": [
+        "non-initiating party won",
+        "health plan won",
+        "insurer won",
+        "closed non-initiating party",
+        "NIP victory",
+        "NIP wins"
+      ],
+      "definition": "Cases where the non-initiating party won the arbitration",
+      "sql_filter": "`case`.status = 'CLOSED_NON_INITIATING_PARTY'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "dismissed",
+      "aliases": [
+        "notice of dismissal",
+        "dismissed non-payment",
+        "dismissal",
+        "both parties defaulted"
+      ],
+      "definition": "Cases dismissed due to both parties failing to pay",
+      "sql_filter": "`case`.status = 'NOTICE_OF_DISMISSAL_NON_PAYMENT'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "administrative closure",
+      "aliases": [
+        "admin closure",
+        "closed administrative",
+        "admin closed",
+        "administratively closed"
+      ],
+      "definition": "Cases closed by administrative action (both parties must have paid)",
+      "sql_filter": "`case`.status = 'CLOSED_ADMINISTRATIVE'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "reopened for correction",
+      "aliases": [
+        "reopened",
+        "correction",
+        "determination correction",
+        "reopened case"
+      ],
+      "definition": "Cases reopened to correct a prior determination before refunds complete",
+      "sql_filter": "`case`.status = 'REOPENED_FOR_CORRECTION'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "payback request",
+      "aliases": [
+        "payback",
+        "overpayment recovery"
+      ],
+      "definition": "Cases in refund correction state where overpayment is being recovered",
+      "sql_filter": "`case`.status = 'PAYBACK_REQUEST'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "completed payment",
+      "aliases": [
+        "paid",
+        "payment received",
+        "payment completed",
+        "successful payment",
+        "payment processed"
+      ],
+      "definition": "A payment record whose status is COMPLETED — funds successfully received",
+      "sql_filter": "`payment`.status = 'COMPLETED'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "approved payment",
+      "aliases": [
+        "payment approved",
+        "approved for ACH",
+        "committed payment"
+      ],
+      "definition": "Payment approved for ACH transmission — funds committed but not yet settled",
+      "sql_filter": "`payment`.status = 'APPROVED'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "pending payment status",
+      "aliases": [
+        "payment status pending",
+        "unprocessed payment"
+      ],
+      "definition": "Payment created but not yet processed",
+      "sql_filter": "`payment`.status = 'PENDING'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "failed payment",
+      "aliases": [
+        "payment failed",
+        "payment failure",
+        "rejected payment"
+      ],
+      "definition": "Payment that failed during processing",
+      "sql_filter": "`payment`.status = 'FAILED'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "cancelled payment",
+      "aliases": [
+        "payment cancelled",
+        "payment cancellation",
+        "voided payment"
+      ],
+      "definition": "Payment that was cancelled by user action",
+      "sql_filter": "`payment`.status = 'CANCELLED'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "on hold payment",
+      "aliases": [
+        "payment on hold",
+        "held payment",
+        "blocked payment",
+        "frozen payment"
+      ],
+      "definition": "Payment blocked from processing — requires manual intervention",
+      "sql_filter": "`payment`.status = 'ON_HOLD'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_status"
+    },
+    {
+      "term": "incoming payment",
+      "aliases": [
+        "payment received",
+        "inbound payment",
+        "money in",
+        "funds received"
+      ],
+      "definition": "Payments received from parties (incoming direction)",
+      "sql_filter": "`payment`.direction = 'INCOMING'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_direction"
+    },
+    {
+      "term": "outgoing payment",
+      "aliases": [
+        "payment sent",
+        "outbound payment",
+        "money out",
+        "disbursement",
+        "payout"
+      ],
+      "definition": "Payments sent to parties or internal payees (outgoing direction)",
+      "sql_filter": "`payment`.direction = 'OUTGOING'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_direction"
+    },
+    {
+      "term": "refund",
+      "aliases": [
+        "refunds",
+        "entity fee refund",
+        "party refund",
+        "refund payment",
+        "money back"
+      ],
+      "definition": "Refund payment issued to the prevailing party after case closure",
+      "sql_filter": "`payment`.`type` IN ('REFUND_TO_PREVAILING_PARTY', 'PARTY_REFUND_IP', 'PARTY_REFUND_NIP')",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "case payment",
+      "aliases": [
+        "entity fee payment",
+        "case fee",
+        "party fee payment",
+        "filing fee"
+      ],
+      "definition": "Party's case fee payment (CASE_PAYMENT type)",
+      "sql_filter": "`payment`.`type` = 'CASE_PAYMENT'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "Capitol Bridge fee",
+      "aliases": [
+        "CB fee",
+        "Capitol Bridge payout",
+        "internal payout CB"
+      ],
+      "definition": "Internal fee payout to Capitol Bridge",
+      "sql_filter": "`payment`.`type` = 'CAPITOL_BRIDGE_FEE'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "third party payment",
+      "aliases": [
+        "Halo payment",
+        "VeraTru payment",
+        "internal distribution",
+        "3rd party payout"
+      ],
+      "definition": "Internal payout to Halo or VeraTru",
+      "sql_filter": "`payment`.`type` = 'THIRD_PARTY_PAYMENT'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "CMS payment",
+      "aliases": [
+        "CMS invoice payment",
+        "CMS fee",
+        "Medicare payment",
+        "CMS admin fee"
+      ],
+      "definition": "CMS (Centers for Medicare & Medicaid) fee payment",
+      "sql_filter": "`payment`.`type` = 'CASE_PAYMENT'",
+      "applies_to_tables": [
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "single dispute",
+      "aliases": [
+        "single case",
+        "single line item",
+        "individual dispute",
+        "type single"
+      ],
+      "definition": "A dispute with exactly 1 line item — $710 total per party",
+      "sql_filter": "`case`.disputeType = 'SINGLE'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "dispute_type"
+    },
+    {
+      "term": "bundled dispute",
+      "aliases": [
+        "bundled case",
+        "bundled",
+        "multiple line items",
+        "type bundled"
+      ],
+      "definition": "A dispute with 2+ line items (not batched) — same pricing as single",
+      "sql_filter": "`case`.disputeType = 'BUNDLED'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "dispute_type"
+    },
+    {
+      "term": "batched dispute",
+      "aliases": [
+        "batched case",
+        "batched",
+        "batch case",
+        "type batched",
+        "large batch"
+      ],
+      "definition": "A dispute with 2-25+ line items explicitly batched — $910 base + surcharges",
+      "sql_filter": "`case`.disputeType = 'BATCHED'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "dispute_type"
+    },
+    {
+      "term": "arbitration",
+      "aliases": [
+        "arbitration case",
+        "arbitration dispute",
+        "arbitration decision",
+        "arbitrated",
+        "arbitration outcome",
+        "arbiter decision",
+        "award",
+        "arbitration award"
+      ],
+      "definition": "A case that has gone through or is going through the arbitration process",
+      "sql_filter": "`case`.id IN (SELECT caseId FROM `arbitration_decision`)",
+      "applies_to_tables": [
+        "case",
+        "arbitration_decision"
+      ],
+      "requires_join": true,
+      "join_table": "arbitration_decision",
+      "category": "process_stage"
+    },
+    {
+      "term": "initiating party",
+      "aliases": [
+        "IP",
+        "initiating party cases",
+        "claimant",
+        "filing party",
+        "party that filed",
+        "provider party"
+      ],
+      "definition": "The party that initiated (filed) the dispute — typically the healthcare provider",
+      "sql_filter": "`case_party`.partyType = 'INITIATING'",
+      "applies_to_tables": [
+        "case_party"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "party_type"
+    },
+    {
+      "term": "non-initiating party",
+      "aliases": [
+        "NIP",
+        "non-initiating party cases",
+        "respondent",
+        "defending party",
+        "party that was filed against",
+        "health plan party"
+      ],
+      "definition": "The party that did not file the dispute (the respondent) — typically the health plan",
+      "sql_filter": "`case_party`.partyType = 'NON_INITIATING'",
+      "applies_to_tables": [
+        "case_party"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "party_type"
+    },
+    {
+      "term": "status change",
+      "aliases": [
+        "status changed",
+        "status transition",
+        "moved to status",
+        "transitioned to",
+        "workflow event",
+        "pipeline event"
+      ],
+      "definition": "A logged event in case_action where the case moved from one status to another",
+      "sql_filter": "`case_action`.actionType = 'STATUS_CHANGED'",
+      "applies_to_tables": [
+        "case_action"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "audit_event"
+    },
+    {
+      "term": "overdue",
+      "aliases": [
+        "overdue cases",
+        "past due",
+        "late cases",
+        "expired deadline",
+        "missed deadline"
+      ],
+      "definition": "Cases where the due_date has passed (due_date < NOW())",
+      "sql_filter": "`case`.due_date IS NOT NULL AND `case`.due_date < NOW()",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "urgency"
+    },
+    {
+      "term": "urgent",
+      "aliases": [
+        "urgent cases",
+        "nearly due",
+        "about to expire",
+        "expiring soon"
+      ],
+      "definition": "Cases with due_date within 2 business days",
+      "sql_filter": "`case`.due_date IS NOT NULL AND `case`.due_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 2 DAY)",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "urgency"
+    },
+    {
+      "term": "overpayment",
+      "aliases": [
+        "overpaid",
+        "excess payment",
+        "payment variance over",
+        "over paid"
+      ],
+      "definition": "Cases where actual payment exceeds expected amount — refund may be needed",
+      "sql_filter": "`invoice_payment`.varianceType = 'OVERPAYMENT'",
+      "applies_to_tables": [
+        "invoice_payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_variance"
+    },
+    {
+      "term": "underpayment",
+      "aliases": [
+        "underpaid",
+        "short payment",
+        "payment variance under",
+        "insufficient payment"
+      ],
+      "definition": "Cases where actual payment is less than expected — collection needed",
+      "sql_filter": "`invoice_payment`.varianceType = 'UNDERPAYMENT'",
+      "applies_to_tables": [
+        "invoice_payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_variance"
+    },
+    {
+      "term": "NACHA batch",
+      "aliases": [
+        "ACH batch",
+        "NACHA file",
+        "ACH transmission",
+        "batch payment",
+        "NACHA processing"
+      ],
+      "definition": "An ACH batch file for bulk payment processing via NACHA",
+      "sql_filter": "`nacha_batch`.id IS NOT NULL",
+      "applies_to_tables": [
+        "nacha_batch"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "banking"
+    },
+    {
+      "term": "month to date",
+      "aliases": [
+        "MTD",
+        "this month",
+        "current month",
+        "month-to-date",
+        "so far this month",
+        "since start of month",
+        "monthly"
+      ],
+      "definition": "Restricts results to cases or events created since the start of the current calendar month",
+      "sql_filter": "createdAt >= DATE_FORMAT(CURDATE(), '%Y-%m-01')",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "today",
+      "aliases": [
+        "this day",
+        "created today",
+        "filed today",
+        "new today",
+        "today's cases",
+        "daily"
+      ],
+      "definition": "Restricts results to cases or events created since midnight today",
+      "sql_filter": "createdAt >= CURDATE()",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "this year",
+      "aliases": [
+        "year to date",
+        "YTD",
+        "current year",
+        "year-to-date",
+        "since start of year",
+        "so far this year"
+      ],
+      "definition": "Restricts results to cases or events created since the start of the current calendar year",
+      "sql_filter": "createdAt >= DATE_FORMAT(CURDATE(), '%Y-01-01')",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "last month",
+      "aliases": [
+        "previous month",
+        "prior month",
+        "last calendar month"
+      ],
+      "definition": "Restricts results to cases or events created during the previous calendar month",
+      "sql_filter": "createdAt >= DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01') AND createdAt < DATE_FORMAT(CURDATE(), '%Y-%m-01')",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "last week",
+      "aliases": [
+        "previous week",
+        "prior week",
+        "past 7 days",
+        "last 7 days"
+      ],
+      "definition": "Restricts results to the last 7 days",
+      "sql_filter": "createdAt >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "last quarter",
+      "aliases": [
+        "previous quarter",
+        "prior quarter",
+        "last 90 days",
+        "past quarter"
+      ],
+      "definition": "Restricts results to the previous 90 days",
+      "sql_filter": "createdAt >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)",
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "payment"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "time_range"
+    },
+    {
+      "term": "line item",
+      "aliases": [
+        "line items",
+        "dispute line item",
+        "dispute items",
+        "individual items",
+        "claim items"
+      ],
+      "definition": "Individual line items within a dispute — each represents a specific claim/charge",
+      "sql_filter": "`dispute_line_items`.id IS NOT NULL",
+      "applies_to_tables": [
+        "dispute_line_items"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_structure"
+    },
+    {
+      "term": "case note",
+      "aliases": [
+        "notes",
+        "internal notes",
+        "case notes",
+        "comments"
+      ],
+      "definition": "Internal notes attached to a case by staff",
+      "sql_filter": "`case_note`.id IS NOT NULL",
+      "applies_to_tables": [
+        "case_note"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_structure"
+    },
+    {
+      "term": "case document",
+      "aliases": [
+        "documents",
+        "uploaded documents",
+        "case documents",
+        "attachments"
+      ],
+      "definition": "Documents uploaded or attached to a case",
+      "sql_filter": "`case_document`.id IS NOT NULL",
+      "applies_to_tables": [
+        "case_document"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_structure"
+    },
+    {
+      "term": "settlement",
+      "aliases": [
+        "settled",
+        "settled cases",
+        "early settlement"
+      ],
+      "definition": "Cases closed due to parties settling outside the IDR process",
+      "sql_filter": "`case`.closureReason = 'EARLY_SETTLEMENT' OR `case`.closureReason = 'SETTLEMENT'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "closure_reason"
+    },
+    {
+      "term": "withdrawal",
+      "aliases": [
+        "withdrawn",
+        "withdrawn cases",
+        "early withdrawal"
+      ],
+      "definition": "Cases closed due to a party withdrawing from the process",
+      "sql_filter": "`case`.closureReason = 'EARLY_WITHDRAWAL' OR `case`.closureReason = 'WITHDRAWAL'",
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "closure_reason"
+    },
+    {
+      "term": "email sent",
+      "aliases": [
+        "emails sent",
+        "email notifications",
+        "sent emails",
+        "notification sent"
+      ],
+      "definition": "Email jobs that have been successfully sent",
+      "sql_filter": "`email_job`.status = 'sent'",
+      "applies_to_tables": [
+        "email_job"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "communication"
+    },
+    {
+      "term": "payment reminder",
+      "aliases": [
+        "reminders",
+        "payment reminders sent",
+        "reminder emails"
+      ],
+      "definition": "Payment reminder records — reminders sent to parties about pending fees",
+      "sql_filter": "`payment_reminder`.id IS NOT NULL",
+      "applies_to_tables": [
+        "payment_reminder"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "communication"
+    },
+    {
+      "term": "dispute number",
+      "aliases": [
+        "dispute ID",
+        "DISP number",
+        "DISP-",
+        "dispute reference",
+        "short ID",
+        "case number",
+        "case ID",
+        "dispute num"
+      ],
+      "definition": "The human-readable dispute identifier displayed as DISP-XXXXXXX. Stored in case.shortId column. When searching by DISP-XXXXXXX, strip the DISP- prefix and match against case.shortId.",
+      "sql_filter": null,
+      "applies_to_tables": [
+        "case"
+      ],
+      "requires_join": false,
+      "join_table": null,
+      "category": "display_format"
+    },
+    {
+      "term": "paid in full",
+      "aliases": [
+        "fully paid",
+        "payment complete",
+        "paid completely",
+        "paid total",
+        "both paid in full"
+      ],
+      "definition": "A party has paid the expected fee in full. For SINGLE/BUNDLED disputes: allocated amount >= $710. For BATCHED: >= $910 base. Check via case_payment_allocation SUM(allocatedAmount) grouped by partyType WHERE payment status IN (PENDING, APPROVED, COMPLETED).",
+      "sql_filter": null,
+      "applies_to_tables": [
+        "case",
+        "case_payment_allocation",
+        "payment"
+      ],
+      "requires_join": true,
+      "join_table": "case_payment_allocation",
+      "category": "payment_lifecycle"
+    },
+    {
+      "term": "UHC",
+      "aliases": [
+        "United Healthcare",
+        "UnitedHealthcare",
+        "United Health Care",
+        "UnitedHealth"
+      ],
+      "definition": "UnitedHealthcare organization — filter by organization.name LIKE \"%United%Health%\"",
+      "sql_filter": ".name LIKE '%United%Health%'",
+      "applies_to_tables": [
+        "organization"
+      ],
+      "requires_join": true,
+      "join_table": "organization",
+      "category": "organization_alias"
+    },
+    {
+      "term": "HaloMD",
+      "aliases": [
+        "Halo",
+        "Halo MD",
+        "halomd main"
+      ],
+      "definition": "HaloMD organization — filter by organization.name LIKE \"%Halo%\"",
+      "sql_filter": ".name LIKE '%Halo%'",
+      "applies_to_tables": [
+        "organization"
+      ],
+      "requires_join": true,
+      "join_table": "organization",
+      "category": "organization_alias"
+    },
+    {
+      "term": "Capitol Bridge",
+      "aliases": [
+        "CB",
+        "Capitol Bridge Admin"
+      ],
+      "definition": "Capitol Bridge organization — filter by organization.name LIKE \"%Capitol%Bridge%\"",
+      "sql_filter": ".name LIKE '%Capitol%Bridge%'",
+      "applies_to_tables": [
+        "organization"
+      ],
+      "requires_join": true,
+      "join_table": "organization",
+      "category": "organization_alias"
+    },
+    {
+      "term": "VeraTru",
+      "aliases": [
+        "VT",
+        "Vera Tru",
+        "VeraTru Support"
+      ],
+      "definition": "VeraTru organization — filter by organization.name LIKE \"%VeraTru%\" OR LIKE \"%Vera%Tru%\"",
+      "sql_filter": ".name LIKE '%Vera%Tru%'",
+      "applies_to_tables": [
+        "organization"
+      ],
+      "requires_join": true,
+      "join_table": "organization",
+      "category": "organization_alias"
+    },
+    {
+      "term": "assigned to",
+      "aliases": [
+        "assigned cases",
+        "active assignments",
+        "currently assigned",
+        "cases for",
+        "workload for"
+      ],
+      "definition": "Cases currently assigned to a user/arbitrator. Use case.assignedToId JOIN user to filter by name. For ACTIVE assignments, exclude terminal statuses.",
+      "sql_filter": null,
+      "applies_to_tables": [
+        "case",
+        "user"
+      ],
+      "requires_join": true,
+      "join_table": "user",
+      "category": "assignment"
+    },
+    {
+      "term": "closed by",
+      "aliases": [
+        "resolved by",
+        "completed by",
+        "decisions by"
+      ],
+      "definition": "Cases closed or decided by a specific user. Use case.closed_by_user_id or case_action WHERE actionType=STATUS_CHANGED AND toValue LIKE CLOSED% to find who closed it.",
+      "sql_filter": null,
+      "applies_to_tables": [
+        "case",
+        "case_action",
+        "user"
+      ],
+      "requires_join": true,
+      "join_table": "user",
+      "category": "assignment"
+    },
+    {
+      "term": "missing payments",
+      "aliases": [
+        "missing payment",
+        "not paid",
+        "payment missing",
+        "no payment yet"
+      ],
+      "definition": "Cases where one or both parties have not made any payment. Check via LEFT JOIN case_payment_allocation — cases with no matching allocation or with NULL paymentId.",
+      "sql_filter": null,
+      "applies_to_tables": [
+        "case",
+        "case_payment_allocation",
+        "payment"
+      ],
+      "requires_join": true,
+      "join_table": "case_payment_allocation",
+      "category": "payment_lifecycle"
+    },
+    {
+      "term": "terminal status",
+      "aliases": [
+        "terminal statuses",
+        "closed statuses",
+        "all closed statuses",
+        "terminal states",
+        "end states"
+      ],
+      "definition": "All statuses representing a completed/closed case, including arbitration decisions and administrative closures. IMPORTANT: FINAL_DETERMINATION_RENDERED is a terminal status even though it does not start with CLOSED.",
+      "sql_filter": "`case`.status IN ('CLOSED_DEFAULT', 'CLOSED_INITIATING_PARTY', 'CLOSED_NON_INITIATING_PARTY', 'CLOSED_ADMINISTRATIVE', 'CLOSED_SPLIT_DECISION', 'NOTICE_OF_DISMISSAL_NON_PAYMENT', 'CLOSED_DEFAULT_IP', 'CLOSED_DEFAULT_NIP', 'INELIGIBLE', 'FINAL_DETERMINATION_RENDERED')",
+      "applies_to_tables": ["case"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "all ineligible",
+      "aliases": [
+        "all ineligible cases",
+        "ineligible rate",
+        "ineligibility",
+        "total ineligible",
+        "ineligible count"
+      ],
+      "definition": "All cases that failed eligibility — includes both terminal INELIGIBLE and INELIGIBLE_PENDING_ADMIN_FEE (still awaiting admin fee). Both must be counted for accurate ineligible rates.",
+      "sql_filter": "`case`.status IN ('INELIGIBLE', 'INELIGIBLE_PENDING_ADMIN_FEE')",
+      "applies_to_tables": ["case"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "case_status"
+    },
+    {
+      "term": "team performance",
+      "aliases": [
+        "staff performance",
+        "team stats",
+        "team report",
+        "top arbitrators",
+        "arbitrator performance",
+        "specialist performance",
+        "who closed the most",
+        "cases per user"
+      ],
+      "definition": "Performance metrics by staff member. Only include users with roles: arbitrator, arbitrator-contractor, admin-support, eligibility-specialist. Join user table on case.assignedToId or case.closed_by_user_id. For closed counts: status IN (CLOSED_INITIATING_PARTY, CLOSED_NON_INITIATING_PARTY, FINAL_DETERMINATION_RENDERED).",
+      "sql_filter": null,
+      "applies_to_tables": ["case", "user"],
+      "requires_join": true,
+      "join_table": "user",
+      "category": "reporting"
+    },
+    {
+      "term": "case outcome",
+      "aliases": [
+        "decision outcome",
+        "arbitration outcome",
+        "who won",
+        "win rate",
+        "IP win rate",
+        "NIP win rate",
+        "decision quality",
+        "award recipient",
+        "decision breakdown"
+      ],
+      "definition": "Case outcomes (who won) are stored in the arbitration_decision table, NOT in case.status. Use arbitration_decision.awardRecipient which has values: INITIATING_PARTY, NON_INITIATING_PARTY, SPLIT. Do NOT use case.status LIKE 'CLOSED_%' for outcome analytics — that misses nuances and is inaccurate.",
+      "sql_filter": null,
+      "applies_to_tables": ["case", "arbitration_decision"],
+      "requires_join": true,
+      "join_table": "arbitration_decision",
+      "category": "reporting"
+    },
+    {
+      "term": "revenue",
+      "aliases": [
+        "total revenue",
+        "money collected",
+        "fees collected",
+        "income",
+        "case fees",
+        "revenue this month",
+        "month over month revenue",
+        "monthly revenue"
+      ],
+      "definition": "Revenue = incoming case fee payments. Filter by payment.type = 'CASE_PAYMENT' (NOT direction = 'INCOMING', which includes other payment types). For month-over-month: group by YEAR(p.createdAt), MONTH(p.createdAt).",
+      "sql_filter": "`payment`.`type` = 'CASE_PAYMENT'",
+      "applies_to_tables": ["payment", "case_payment_allocation"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "IDRE payout",
+      "aliases": [
+        "payout",
+        "payouts",
+        "IDRE payouts",
+        "entity fee",
+        "entity fees",
+        "Capitol Bridge share",
+        "CB share",
+        "payout breakdown",
+        "fee split"
+      ],
+      "definition": "IDRE payouts are internal fee distributions. Capitol Bridge is identified by bankingSnapshot->'$.accountHolderName' or bankingSnapshot->'$.recipientName' containing 'Capitol Bridge' — NOT by payment.type. Entity fee per case comes from CASE_PRICING constants. Third-party payouts (Halo, VeraTru) use payment.type = 'THIRD_PARTY_PAYMENT'.",
+      "sql_filter": null,
+      "applies_to_tables": ["payment", "case_payment_allocation"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "payment_type"
+    },
+    {
+      "term": "due date",
+      "aliases": [
+        "due dates",
+        "due dates report",
+        "deadlines",
+        "case deadlines",
+        "approaching deadlines",
+        "days until due",
+        "time remaining"
+      ],
+      "definition": "Due dates for cases. The case table has dueDate column (camelCase in DB). For days remaining: DATEDIFF(case.dueDate, CURDATE()). Negative = overdue. Group by status to show where cases are in pipeline.",
+      "sql_filter": "`case`.dueDate IS NOT NULL",
+      "applies_to_tables": ["case"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "urgency"
+    },
+    {
+      "term": "arbitrator",
+      "aliases": [
+        "arbitrators",
+        "arbiter",
+        "arbitration specialist",
+        "decision maker"
+      ],
+      "definition": "Users with role 'arbitrator' or 'arbitrator-contractor' who make final determinations. Join user table on case.assignedToId. For active caseload: WHERE case.status NOT IN terminal statuses.",
+      "sql_filter": null,
+      "applies_to_tables": ["case", "user"],
+      "requires_join": true,
+      "join_table": "user",
+      "category": "role"
+    },
+    {
+      "term": "eligibility specialist",
+      "aliases": [
+        "eligibility staff",
+        "eligibility reviewer",
+        "ES",
+        "eligibility team"
+      ],
+      "definition": "Users with role 'eligibility-specialist' who handle initial and final eligibility reviews.",
+      "sql_filter": null,
+      "applies_to_tables": ["user"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "role"
+    },
+    {
+      "term": "dispute type breakdown",
+      "aliases": [
+        "type breakdown",
+        "single vs bundled vs batched",
+        "dispute types",
+        "case types",
+        "type distribution"
+      ],
+      "definition": "Breakdown of disputes by disputeType column. Values: SINGLE (1 line item, $710/party), BUNDLED (2+ items, $710/party), BATCHED (2-25+ items, $910+ base with surcharges). Use GROUP BY case.disputeType.",
+      "sql_filter": null,
+      "applies_to_tables": ["case"],
+      "requires_join": false,
+      "join_table": null,
+      "category": "dispute_type"
+    }
+  ]
+}
