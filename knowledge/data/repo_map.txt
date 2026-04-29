@@ -1,0 +1,3045 @@
+app/2fa/login-verify/page.tsx
+  dynamic
+  TwoFactorLoginVerifyPage
+app/2fa/setup/page.tsx
+  dynamic
+  TwoFactorSetupPage
+app/2fa/verify/page.tsx
+  dynamic
+  TwoFactorVerifyPage
+app/admin-setup/page.tsx
+  AdminSetupPageContent
+app/admin/health/page.tsx
+  metadata
+  HealthPage
+app/api/admin/impersonate/route.ts
+  POST
+app/api/admin/process-pending-emails/route.ts
+  POST
+  GET
+app/api/admin/reset-2fa/route.ts
+  POST
+app/api/auth/[...all]/route.ts
+  GET
+  POST
+app/api/auth/redirect-home/route.ts
+  GET
+app/api/cases/[caseId]/payment-status/route.ts
+  GET
+app/api/cases/[caseId]/route.ts
+  GET
+app/api/cases/check-dispute-reference/route.ts
+  GET
+app/api/cases/search/route.ts
+  GET
+app/api/email/idr-preview/route.ts
+  GET
+  POST
+  OPTIONS
+app/api/health/route.ts
+  GET
+  POST
+app/api/nacha/generate/route.ts
+  maxDuration
+  POST
+app/api/organizations/search/route.ts
+  GET
+app/api/parse-pdf/route.ts
+  POST
+app/api/reports/auditing/daily-funds/route.ts
+  GET
+app/api/reports/auditing/daily-transactions/route.ts
+  TransactionRow
+  GET
+app/api/reports/case-analytics/route.ts
+  GET
+app/api/reports/case-balance/route.ts
+  GET
+app/api/reports/cms-payments/route.ts
+  GET
+app/api/reports/dashboard-stats/route.ts
+  GET
+app/api/reports/due-dates/route.ts
+  GET
+app/api/reports/due-dates/summary/route.ts
+  GET
+app/api/reports/export/route.ts
+  POST
+app/api/reports/idre-payouts/route.ts
+  GET
+app/api/reports/outstanding-payments/route.ts
+  GET
+app/api/reports/recent-activity/route.ts
+  GET
+app/api/reports/team-performance/route.ts
+  GET
+app/api/reports/unpaid-disputes/route.ts
+  GET
+app/api/stripe/webhook/route.ts
+  POST
+app/api/system/init-status/route.ts
+  GET
+  POST
+app/api/test/cases/[caseId]/adjust-status/route.ts
+  POST
+app/api/test/cases/[caseId]/assign/route.ts
+  POST
+app/api/test/cases/[caseId]/confirm-payback/route.ts
+  POST
+app/api/test/cases/[caseId]/correct/route.ts
+  POST
+app/api/test/cases/[caseId]/reopen/route.ts
+  POST
+app/api/test/cases/[caseId]/retry-refund/route.ts
+  POST
+app/api/upload/download-url/route.ts
+  POST
+app/api/upload/presign/route.ts
+  POST
+app/api/upload/proxy/route.ts
+  POST
+app/app/banking/page.tsx
+  BankingPage
+app/app/banking/setup/page.tsx
+  BankingSetupPage
+app/app/cases/[caseId]/components/case-timeline.tsx
+  CaseTimeline
+  TimelineStep
+  CaseTimelineProps
+app/app/cases/[caseId]/page.tsx
+  CaseDetailPage
+app/app/cases/components/case-mini-timeline.tsx
+  CaseMiniTimeline
+app/app/cases/components/cases-page-client.tsx
+  CasesPageClient
+app/app/cases/lib/utils.ts
+  formatCurrency
+  getStatusDisplay
+  getPartyTypeDisplay
+  calculateIDREFee
+  getPaymentDueDate
+  isPaymentOverdue
+  getDaysUntilDue
+app/app/cases/page.tsx
+  CasesPage
+app/app/components/app-sidebar.tsx
+  AppSidebar
+app/app/components/banking-setup-guard.tsx
+app/app/components/cases-overview.tsx
+  CasesOverview
+app/app/components/logout-button.tsx
+  LogoutButton
+app/app/components/payments-overview.tsx
+  PaymentsOverview
+  PaymentsOverviewProps
+app/app/components/site-header.tsx
+  SiteHeader
+app/app/components/welcome-card.tsx
+  WelcomeCard
+app/app/invoices/[invoiceId]/components/invoice-details-view.tsx
+  InvoiceDetailsView
+app/app/invoices/[invoiceId]/page.tsx
+  InvoiceDetailPage
+app/app/invoices/components/create-invoice-dialog.tsx
+  CreateInvoiceDialog
+  CreateInvoiceDialogProps
+app/app/invoices/components/create-invoice-form.tsx
+  CreateInvoiceForm
+app/app/invoices/components/invoices-client-wrapper.tsx
+  InvoicesClientWrapper
+app/app/invoices/components/invoices-table.tsx
+  InvoicesTable
+  Invoice
+  InvoicesTableProps
+app/app/invoices/page.tsx
+  InvoicesPage
+app/app/layout.tsx
+  AppLayout
+  dynamic
+  revalidate
+app/app/lib/logout-action.ts
+  logout
+app/app/members/components/members-management.tsx
+  MembersManagement
+app/app/members/page.tsx
+  MembersPage
+app/app/page.tsx
+  AppDashboard
+app/app/payments/components/invoice-payment-option.tsx
+  InvoicePaymentOption
+app/app/payments/components/loading-skeletons.tsx
+  PaymentFormSkeleton
+  PaymentHistorySkeleton
+  PendingInvoicesSkeleton
+app/app/payments/components/payment-form-section.tsx
+  PaymentFormSection
+app/app/payments/components/payment-form.tsx
+  PaymentForm
+app/app/payments/components/payment-history-section.tsx
+  PaymentHistorySection
+app/app/payments/components/payment-history.tsx
+  PaymentHistory
+app/app/payments/components/payment-invoice.tsx
+  PaymentInvoice
+app/app/payments/components/pending-invoices-card.tsx
+  PendingInvoicesCard
+app/app/payments/components/pending-invoices-section.tsx
+  PendingInvoicesSection
+app/app/payments/components/stripe-success-handler.tsx
+  StripeSuccessHandler
+app/app/payments/page.tsx
+  PaymentsPage
+app/app/refund-settings/components/check-refund-settings-client.tsx
+  CheckRefundSettingsClient
+app/app/refund-settings/page.tsx
+  RefundSettingsPage
+app/app/refunds/components/refunds-client-wrapper.tsx
+  RefundsClientWrapper
+app/app/refunds/components/refunds-table.tsx
+  RefundsTable
+app/app/refunds/page.tsx
+  RefundsPage
+app/dashboard/account/page.tsx
+  AccountPage
+app/dashboard/account/two-factor/page.tsx
+  dynamic
+  TwoFactorManagementPage
+app/dashboard/admin-closures/page.tsx
+  AdminClosurePage
+app/dashboard/arbitration/[id]/page.tsx
+  ArbitrationCaseDetailPage
+app/dashboard/arbitration/page.tsx
+  ArbitrationPage
+app/dashboard/banking/banking-client.tsx
+  BankingClient
+app/dashboard/banking/loading.tsx
+  BankingLoading
+app/dashboard/banking/page.tsx
+  maxDuration
+  BankingPage
+app/dashboard/cases/[id]/components/case-detail-wrapper.tsx
+  CaseDetailWrapper
+app/dashboard/cases/[id]/components/loading-skeleton.tsx
+  CaseDetailSkeleton
+app/dashboard/cases/[id]/page.tsx
+  CaseDetailPage
+app/dashboard/cases/create/page.tsx
+  CreateCasePage
+app/dashboard/cases/page.tsx
+  CasesPage
+app/dashboard/cms-invoices/page.tsx
+  CmsInvoicesPage
+app/dashboard/company/company-page-client.tsx
+  AdminInvitationsSection
+app/dashboard/company/loading.tsx
+  Loading
+app/dashboard/company/page.tsx
+  CompanyPage
+app/dashboard/company/party/[partyUserId]/components/loading-skeletons.tsx
+  PartyPaymentsSkeleton
+  MemberManagementSkeleton
+  OrganizationListSkeleton
+app/dashboard/company/party/[partyUserId]/components/member-management-section.tsx
+  MemberManagementSection
+app/dashboard/company/party/[partyUserId]/components/organization-list-section.tsx
+  OrganizationListSection
+app/dashboard/company/party/[partyUserId]/components/party-payments-section.tsx
+  PartyPaymentsSection
+app/dashboard/company/party/[partyUserId]/page.tsx
+  PartyFinancialPage
+app/dashboard/eligibility/[id]/page.tsx
+  CaseDetailPage
+app/dashboard/eligibility/page.tsx
+  EligibilityPage
+app/dashboard/error.tsx
+  DashboardError
+app/dashboard/layout.tsx
+  dynamic
+  DashboardLayout
+app/dashboard/loading.tsx
+  Loading
+app/dashboard/nacha-history/page.tsx
+  NachaHistoryPage
+app/dashboard/organizations/[organizationId]/financial/page.tsx
+  OrganizationFinancialPage
+app/dashboard/organizations/page.tsx
+  OrganizationsPage
+app/dashboard/page.tsx
+  DashboardPage
+app/dashboard/payments/components/check-refund-dialog.tsx
+  CheckRefundDialog
+app/dashboard/payments/loading.tsx
+  PaymentsLoading
+app/dashboard/payments/page.tsx
+  PaymentsPage
+app/dashboard/payments/payments-client.tsx
+  PaymentsClient
+app/dashboard/reports/case-analytics/page.tsx
+  CaseAnalyticsPage
+app/dashboard/reports/case-balance/page.tsx
+  CaseBalanceReportPage
+app/dashboard/reports/cms-payments/page.tsx
+  CmsPaymentsPage
+app/dashboard/reports/daily-funds-incoming/page.tsx
+  DailyFundsIncomingReportPage
+app/dashboard/reports/daily-funds-outgoing/page.tsx
+  DailyFundsOutgoingReportPage
+app/dashboard/reports/daily-transactions/page.tsx
+  metadata
+  DailyTransactionsPage
+app/dashboard/reports/due-dates/page.tsx
+  DueDatesReportPage
+app/dashboard/reports/idre-payouts/page.tsx
+  metadata
+  IdrePayoutsPage
+app/dashboard/reports/outstanding-payments/page.tsx
+  OutstandingPaymentsReportPage
+app/dashboard/reports/page.tsx
+  ReportsPage
+app/dashboard/reports/payment-variance/page.tsx
+  PaymentVarianceReportPage
+app/dashboard/reports/team-performance/page.tsx
+  TeamPerformancePage
+app/dashboard/reports/unpaid-disputes/page.tsx
+  UnpaidDisputesReportPage
+app/global-error.tsx
+  GlobalError
+app/invite/[invitationId]/components/invitation-acceptance.tsx
+  InvitationAcceptance
+app/invite/[invitationId]/lib/actions.ts
+  acceptInvitation
+app/invite/[invitationId]/page.tsx
+  InvitationPage
+app/join-organization/[invitationId]/components/invitation-acceptance-form.tsx
+  InvitationAcceptanceForm
+app/join-organization/[invitationId]/page.tsx
+  JoinOrganizationPage
+app/layout.tsx
+  metadata
+  RootLayout
+app/page.tsx
+  dynamic
+  HomePage
+app/reset-password/page.tsx
+  ResetPassword
+app/signup/page.tsx
+  Home
+components/FileUpload.js
+  FlexibleFileUpload
+components/account-form.tsx
+  AccountForm
+components/admin-closure/admin-closure-dashboard.tsx
+  AdminClosureDashboard
+components/admin-closure/send-closure-emails-button.tsx
+  SendClosureEmailsButton
+components/admin-users-table.tsx
+  AdminUsersTable
+components/admin/admin-actions-tab.tsx
+  AdminActionsTab
+components/admin/administrative-closure-modal.tsx
+  AdministrativeClosureModal
+components/admin/administrative-closure-summary.tsx
+  AdministrativeClosureSummary
+components/admin/manual-status-adjustment-dialog.tsx
+  ManualStatusAdjustmentDialog
+components/app-sidebar.tsx
+  AppSidebar
+components/arbitration/arbitration-action-panel.tsx
+  ArbitrationActionPanel
+components/arbitration/arbitration-dashboard.tsx
+  ArbitrationDashboard
+components/arbitration/arbitration-workflow-guide.tsx
+  ArbitrationWorkflowGuide
+components/arbitration/case-notes.tsx
+  ArbitrationCaseNotes
+components/arbitration/confirm-payback-dialog.tsx
+  ConfirmPaybackDialog
+components/arbitration/correct-determination-dialog.tsx
+  CorrectDeterminationDialog
+components/arbitration/decision-details.tsx
+  DecisionDetails
+components/arbitration/decision-summary-card.tsx
+  DecisionSummaryCard
+components/arbitration/enhanced-final-determination-modal.tsx
+  EnhancedFinalDeterminationModal
+components/arbitration/overall-case-decision-modal.tsx
+  OverallCaseDecisionModal
+components/arbitration/quick-actions-panel.tsx
+  QuickActionsPanel
+components/arbitration/reopen-for-correction-dialog.tsx
+  ReopenForCorrectionDialog
+components/arbitration/retry-refund-dialog.tsx
+  RetryRefundDialog
+components/bank-accounts-manager.tsx
+  BankAccountsManager
+components/case-ach-form.tsx
+  CaseAchForm
+components/case-detail-view.tsx
+  CaseDetailView
+components/case-ledger-view.tsx
+  CaseLedgerView
+components/case-payment-ledger-legacy.tsx
+  CasePaymentLedgerLegacy
+components/case-payment-ledger-v2.tsx
+  CasePaymentLedgerV2
+components/case-payment-ledger.tsx
+  CasePaymentLedger
+  CasePaymentLedgerProps
+components/case-review/case-details-edit-dialog.tsx
+  CaseDetailsEditDialog
+components/case-review/case-review-modal.tsx
+  CaseReviewModal
+components/case-review/contact-edit-dialog.tsx
+  ContactEditDialog
+components/case-review/contact-information-edit-modal.tsx
+  ContactData
+  PartyContactsData
+  ContactInformationEditData
+components/case-review/missing-contacts-dialog.tsx
+  MissingContactsDialog
+components/case-review/organization-assignments-edit-modal.tsx
+  OrganizationData
+  OrganizationAssignmentsEditData
+  OrganizationAssignmentsEditModal
+components/case-review/organization-edit-dialog.tsx
+  OrganizationEditDialog
+components/case-review/party-edit-dialog.tsx
+  PartyEditDialog
+components/case-review/party-info-update-wizard.tsx
+  PartyType
+  getPartyLabels
+  PartyWizardData
+  NipWizardData
+  ContactData
+  PartyWizardProps
+  NipWizardProps
+  PartyInfoUpdateWizard
+components/case-review/party-wizard-step-confirmation.tsx
+  NipConfirmationStep
+components/case-review/party-wizard-step-contacts.tsx
+  NipContactsStepProps
+  ContactDisplay
+  ContactForm
+components/case-review/party-wizard-step-organization.tsx
+  NipOrganizationStep
+components/case-wizard/contact-info-form.tsx
+  ContactInfoForm
+components/case-wizard/party-info-form.tsx
+  PartyInfoForm
+components/case-wizard/step-basic-info.tsx
+  StepBasicInfo
+components/case-wizard/step-documentation.tsx
+  StepDocumentation
+components/case-wizard/step-health-plan.tsx
+  StepHealthPlan
+components/case-wizard/step-insurance-info.tsx
+  StepInsuranceInfo
+components/case-wizard/step-line-items.tsx
+  StepLineItems
+  StepLineItemsProps
+components/case-wizard/step-organization.tsx
+  OrganizationSelectionSection
+components/case-wizard/step-pdf-upload.tsx
+  StepPdfUpload
+components/case-wizard/step-provider-info.tsx
+  StepProviderInfo
+components/case-wizard/wizard-container.tsx
+  WizardContainer
+components/case-wizard/wizard-navigation.tsx
+  WizardNavigation
+components/case-wizard/wizard-progress.tsx
+  WizardProgress
+components/cases/case-filters-general.tsx
+  GeneralCaseFilters
+  GeneralCaseFiltersProps
+components/cases/case-table-read-only.tsx
+  CaseTableReadOnly
+components/cases/cases-dashboard.tsx
+  CasesDashboard
+components/cases/general-dashboard-layout.tsx
+  GeneralDashboardLayout
+  GeneralDashboardLayoutProps
+components/cms/cms-invoice-list.tsx
+  CmsInvoiceList
+  CmsInvoiceListProps
+components/cms/cms-status-badge.tsx
+  getStatusBadge
+components/cms/create-cms-invoice-dialog.tsx
+  CreateCmsInvoiceDialog
+components/cms/pending-cms-payments-list.tsx
+  PendingCmsPaymentsList
+components/cms/process-cms-invoice-dialog.tsx
+  ProcessCmsInvoiceDialog
+components/company/admin-global-member-management.tsx
+  AdminGlobalMemberManagement
+  GlobalMember
+  AdminGlobalMemberManagementProps
+components/company/organization-list.tsx
+  OrganizationList
+  Organization
+  OrganizationListProps
+components/company/party-user-payments.tsx
+  PartyUserPayments
+components/documentation-checklist.tsx
+  DocumentationChecklist
+components/eligibility/case-actions.tsx
+  CaseActions
+components/eligibility/case-closure-action-modal.tsx
+  CaseClosureActionModal
+components/eligibility/case-documents.tsx
+  CaseDocuments
+components/eligibility/case-filters.tsx
+  CaseFilters
+  CaseFiltersProps
+components/eligibility/case-notes.tsx
+  CaseNotes
+components/eligibility/case-overview.tsx
+  CaseOverview
+  CaseOverviewProps
+components/eligibility/case-table.tsx
+  CaseTable
+components/eligibility/case-type-conversion-section.tsx
+  CaseTypeConversionSection
+components/eligibility/confirmation-modal.tsx
+  ConfirmationModal
+  ConfirmationModalProps
+components/eligibility/eligibility-dashboard.tsx
+  EligibilityDashboard
+components/eligibility/eligibility-quick-actions-panel.tsx
+  EligibilityQuickActionsPanel
+components/eligibility/line-item-edit-dialog.tsx
+  LineItemEditDialog
+components/eligibility/line-item-removal-dialog.tsx
+  LineItemRemovalDialog
+components/eligibility/rfi-modal.tsx
+  RFIModal
+components/eligibility/rfi-request-modal.tsx
+  RFIRequestData
+  RFIRequestModal
+components/eligibility/send-ineligibility-emails-button.tsx
+  SendIneligibilityEmailsButton
+components/email/email-history-modal.tsx
+  EmailHistoryModal
+  EmailHistoryModalProps
+components/email/email-preview-modal.tsx
+  EmailPreviewModal
+components/email/send-payment-email-button.tsx
+  SendPaymentEmailButton
+components/error-boundary.tsx
+  ErrorBoundary
+  ErrorFallback
+components/impersonation-banner.tsx
+  ImpersonationBanner
+  GlobalImpersonationBanner
+components/master-case-search.tsx
+  MasterCaseSearch
+components/nav-main.tsx
+  NavItem
+  NavMain
+components/nav-user.tsx
+  NavUser
+components/organizations-management.tsx
+  OrganizationsManagement
+components/organizations/manage-members-dialog.tsx
+  ManageMembersDialog
+components/organizations/organization-financial-controls/ach-accounts-section.tsx
+  AchAccountsSection
+components/organizations/organization-financial-controls/check-refund-section.tsx
+  CheckRefundSection
+components/organizations/organization-financial-controls/constants.ts
+  accountRoleLabels
+  accountRoleBadgeClassMap
+  paymentStatusLabels
+  paymentStatusClassMap
+  approvalStatusLabels
+  approvalStatusClassMap
+  requestStatusLabels
+  requestStatusClassMap
+  formStatusLabels
+  formStatusClassMap
+  caseStatusLabels
+  caseStatusClassMap
+  casePriorityLabels
+  casePriorityClassMap
+components/organizations/organization-financial-controls/financial-overview.tsx
+  FinancialOverview
+components/organizations/organization-financial-controls/index.tsx
+  OrganizationFinancialControls
+components/organizations/organization-financial-controls/invoice-section.tsx
+  InvoiceSection
+components/organizations/organization-financial-controls/utils.ts
+  formatDateTime
+  formatDate
+  formatCurrencyFromCents
+components/partial-access-alert.tsx
+  PartialAccessAlert
+components/party-banking-form.tsx
+  PartyBankingForm
+components/party-dashboard-enhanced.tsx
+  PartyDashboardEnhanced
+components/party-dashboard-layout.tsx
+  PartyDashboardLayout
+components/party-dashboard.tsx
+  PartyDashboard
+components/party-overview.tsx
+  PartyOverview
+components/party-users-table.tsx
+  PartyUsersTable
+  PartyUsersTableProps
+components/party/banking/bank-account-card.tsx
+  BankAccountCard
+components/party/banking/banking-setup-form.tsx
+  BankingSetupForm
+components/party/banking/google-address-form-field.tsx
+  GoogleAddressFormField
+  GoogleAddressFormFieldProps
+components/party/banking/google-address-input.tsx
+  AddressData
+  GoogleAddressInput
+components/party/banking/multi-org-bank-account-dialog.tsx
+  MultiOrgBankAccountDialog
+components/party/banking/organization-switcher.tsx
+  OrganizationSwitcher
+components/payment-history-view.tsx
+  PaymentHistoryView
+components/pending-payments-view.tsx
+  PendingPaymentsView
+components/reports/auditing-reports.tsx
+  AuditingReports
+components/reports/case-analytics.tsx
+  CaseAnalytics
+components/reports/case-balance-report.tsx
+  CaseBalanceReport
+components/reports/cms-payments-analytics.tsx
+  CmsPaymentsAnalytics
+components/reports/daily-funds-incoming-report.tsx
+  DailyFundsIncomingReport
+components/reports/daily-funds-outgoing-report.tsx
+  DailyFundsOutgoingReport
+components/reports/daily-transactions-report.tsx
+  DailyTransactionsReport
+components/reports/due-dates-report.tsx
+  DueDatesReport
+components/reports/idre-payouts-report.tsx
+  IdrePayoutsReport
+components/reports/outstanding-payments-report.tsx
+  OutstandingPaymentsReport
+components/reports/payment-variance-report.tsx
+  PaymentVarianceReport
+components/reports/report-filters.tsx
+  ReportFilters
+components/reports/report-page-wrapper.tsx
+  ReportPageWrapper
+components/reports/reports-dashboard.tsx
+  ReportsDashboard
+components/reports/team-performance-analytics.tsx
+  TeamPerformanceAnalytics
+components/reports/unpaid-disputes-report.tsx
+  UnpaidDisputesReport
+components/shared/bulk-assignment-toolbar.tsx
+  BulkAssignmentToolbar
+components/shared/bulk-case-assignment-dialog.tsx
+  BulkCaseAssignmentDialog
+  BulkCaseAssignmentDialogProps
+  AssignableUser
+components/shared/case-assignment-dialog.tsx
+  CaseAssignmentDialog
+  CaseAssignmentDialogProps
+  AssignableUser
+components/shared/case-detail-header.tsx
+  CaseDetailHeader
+components/shared/case-detail-tabs.tsx
+  CaseDetailTabs
+components/shared/case-detail-view.tsx
+  CaseDetailView
+components/shared/case-filters.tsx
+  CaseFilters
+components/shared/case-table.tsx
+  CaseTable
+components/shared/dashboard-layout.tsx
+  DashboardLayout
+  DashboardLayoutProps
+components/shared/dispute-line-items-section.tsx
+  DisputeLineItemsSection
+components/shared/due-date-display.tsx
+  DueDateDisplay
+components/shared/global-member-management.tsx
+  GlobalMemberManagement
+  GlobalMember
+  GlobalMemberManagementProps
+components/shared/pagination-controls-new.tsx
+  PaginationControls
+components/shared/pagination-controls.tsx
+  PaginationControls
+  SimplePagination
+components/shared/quick-actions-panel.tsx
+  QuickAction
+  QuickActionsPanel
+components/shared/workflow-modules/arbitration-workflow.tsx
+  arbitrationWorkflow
+components/shared/workflow-modules/eligibility-workflow.tsx
+  isDefaultClosed
+  isAdminClosureAllowed
+  EligibilityStatusAlerts
+  EligibilitySummaryCard
+components/shared/workflow-modules/general-workflow.tsx
+  generalWorkflow
+components/shared/workflow-modules/types.ts
+  WorkflowModuleProps
+  WorkflowModule
+  CaseDetailViewProps
+components/sign-in.tsx
+  SignIn
+components/sign-up.tsx
+  SignUp
+components/site-header.tsx
+  SiteHeader
+components/site-settings.tsx
+  SiteSettings
+components/stripe-payment-form.tsx
+  StripePaymentForm
+components/system-health-status.tsx
+  SystemHealthStatus
+components/test/test-workflow-tab.tsx
+  TestWorkflowTab
+components/testing-mode-wrapper.tsx
+  TestingModeWrapper
+components/testing-role-dropdown.tsx
+  TestingRoleDropdown
+components/testing-role-selector.tsx
+  TestingRoleSelector
+components/theme-provider.tsx
+  ThemeProvider
+components/theme-toggle.tsx
+  ModeToggle
+components/two-factor-dashboard-card.tsx
+  TwoFactorDashboardCard
+components/two-factor-device-change-modal.tsx
+  DeviceChangeModal
+components/two-factor-login-verify.tsx
+  TwoFactorLoginVerify
+components/two-factor-management.tsx
+  TwoFactorManagement
+components/two-factor-setup.tsx
+  TwoFactorSetup
+components/two-factor-verification-modal.tsx
+  VerificationData
+  TwoFactorVerificationModal
+components/two-factor-verify.tsx
+  TwoFactorVerify
+components/ui/accordion.tsx
+  Accordion
+  AccordionItem
+  AccordionTrigger
+  AccordionContent
+components/ui/alert-dialog.tsx
+  AlertDialog
+  AlertDialogPortal
+  AlertDialogOverlay
+  AlertDialogTrigger
+  AlertDialogContent
+  AlertDialogHeader
+  AlertDialogFooter
+  AlertDialogTitle
+  AlertDialogDescription
+  AlertDialogAction
+  AlertDialogCancel
+components/ui/alert.tsx
+  Alert
+  AlertTitle
+  AlertDescription
+components/ui/aspect-ratio.tsx
+  AspectRatio
+components/ui/avatar.tsx
+  Avatar
+  AvatarImage
+  AvatarFallback
+components/ui/badge.tsx
+  Badge
+  badgeVariants
+components/ui/breadcrumb.tsx
+  Breadcrumb
+  BreadcrumbList
+  BreadcrumbItem
+  BreadcrumbLink
+  BreadcrumbPage
+  BreadcrumbSeparator
+  BreadcrumbEllipsis
+components/ui/button.tsx
+  Button
+  buttonVariants
+  ButtonProps
+components/ui/calendar.tsx
+  Calendar
+  CalendarDayButton
+components/ui/card.tsx
+  Card
+  CardHeader
+  CardFooter
+  CardTitle
+  CardDescription
+  CardContent
+components/ui/carousel.tsx
+  CarouselApi
+  Carousel
+  CarouselContent
+  CarouselItem
+  CarouselPrevious
+  CarouselNext
+components/ui/case-file-upload.tsx
+  CaseFileUpload
+components/ui/chart.tsx
+  ChartConfig
+  ChartContainer
+  ChartTooltip
+  ChartTooltipContent
+  ChartLegend
+  ChartLegendContent
+components/ui/checkbox.tsx
+  Checkbox
+components/ui/collapsible.tsx
+  Collapsible
+  CollapsibleTrigger
+  CollapsibleContent
+components/ui/command.tsx
+  Command
+  CommandDialog
+  CommandInput
+  CommandList
+  CommandEmpty
+  CommandGroup
+  CommandItem
+  CommandShortcut
+  CommandSeparator
+components/ui/context-menu.tsx
+  ContextMenu
+  ContextMenuTrigger
+  ContextMenuContent
+  ContextMenuItem
+  ContextMenuCheckboxItem
+  ContextMenuRadioItem
+  ContextMenuLabel
+  ContextMenuSeparator
+  ContextMenuShortcut
+  ContextMenuGroup
+  ContextMenuPortal
+  ContextMenuSub
+  ContextMenuSubContent
+  ContextMenuSubTrigger
+  ContextMenuRadioGroup
+components/ui/currency-input.tsx
+  CurrencyInput
+components/ui/date-picker.tsx
+  DatePicker
+  DatePickerWithRange
+components/ui/dialog.tsx
+  Dialog
+  DialogClose
+  DialogContent
+  DialogDescription
+  DialogFooter
+  DialogHeader
+  DialogOverlay
+  DialogPortal
+  DialogTitle
+  DialogTrigger
+components/ui/drawer.tsx
+  Drawer
+  DrawerPortal
+  DrawerOverlay
+  DrawerTrigger
+  DrawerClose
+  DrawerContent
+  DrawerHeader
+  DrawerFooter
+  DrawerTitle
+  DrawerDescription
+components/ui/dropdown-menu.tsx
+  DropdownMenu
+  DropdownMenuPortal
+  DropdownMenuTrigger
+  DropdownMenuContent
+  DropdownMenuGroup
+  DropdownMenuItem
+  DropdownMenuCheckboxItem
+  DropdownMenuRadioGroup
+  DropdownMenuRadioItem
+  DropdownMenuLabel
+  DropdownMenuSeparator
+  DropdownMenuShortcut
+  DropdownMenuSub
+  DropdownMenuSubTrigger
+  DropdownMenuSubContent
+components/ui/empty-state.tsx
+  EmptyState
+  EmptyStateProps
+components/ui/error-boundary.tsx
+  ErrorBoundary
+components/ui/file-upload.tsx
+  FileUpload
+components/ui/form.tsx
+  useFormField
+  Form
+  FormItem
+  FormLabel
+  FormControl
+  FormDescription
+  FormMessage
+  FormField
+components/ui/hover-card.tsx
+  HoverCard
+  HoverCardTrigger
+  HoverCardContent
+components/ui/input-otp.tsx
+  InputOTP
+  InputOTPGroup
+  InputOTPSlot
+  InputOTPSeparator
+components/ui/input.tsx
+  Input
+components/ui/label.tsx
+  Label
+components/ui/menubar.tsx
+  Menubar
+  MenubarMenu
+  MenubarGroup
+  MenubarPortal
+  MenubarRadioGroup
+  MenubarTrigger
+  MenubarContent
+  MenubarItem
+  MenubarCheckboxItem
+  MenubarRadioItem
+  MenubarLabel
+  MenubarSeparator
+  MenubarShortcut
+  MenubarSub
+  MenubarSubTrigger
+  MenubarSubContent
+components/ui/navigation-menu.tsx
+  NavigationMenu
+  NavigationMenuList
+  NavigationMenuItem
+  NavigationMenuContent
+  NavigationMenuTrigger
+  NavigationMenuLink
+  NavigationMenuIndicator
+  NavigationMenuViewport
+  navigationMenuTriggerStyle
+components/ui/pagination.tsx
+  Pagination
+  PaginationContent
+  PaginationLink
+  PaginationItem
+  PaginationPrevious
+  PaginationNext
+  PaginationEllipsis
+components/ui/popover.tsx
+  Popover
+  PopoverTrigger
+  PopoverContent
+  PopoverAnchor
+components/ui/progress.tsx
+  Progress
+components/ui/radio-group.tsx
+  RadioGroup
+  RadioGroupItem
+components/ui/resizable.tsx
+  ResizablePanelGroup
+  ResizablePanel
+  ResizableHandle
+components/ui/scroll-area.tsx
+  ScrollArea
+  ScrollBar
+components/ui/select.tsx
+  Select
+  SelectContent
+  SelectGroup
+  SelectItem
+  SelectLabel
+  SelectScrollDownButton
+  SelectScrollUpButton
+  SelectSeparator
+  SelectTrigger
+  SelectValue
+components/ui/separator.tsx
+  Separator
+components/ui/sheet.tsx
+  Sheet
+  SheetTrigger
+  SheetClose
+  SheetContent
+  SheetHeader
+  SheetFooter
+  SheetTitle
+  SheetDescription
+components/ui/sidebar.tsx
+  useSidebar
+  SidebarProvider
+  Sidebar
+components/ui/skeleton.tsx
+  Skeleton
+components/ui/slider.tsx
+  Slider
+components/ui/sonner.tsx
+  Toaster
+components/ui/status-badge.tsx
+  StatusBadge
+components/ui/switch.tsx
+  Switch
+components/ui/table.tsx
+  Table
+  TableHeader
+  TableBody
+  TableFooter
+  TableHead
+  TableRow
+  TableCell
+  TableCaption
+components/ui/tabs.tsx
+  Tabs
+  TabsList
+  TabsTrigger
+  TabsContent
+components/ui/textarea.tsx
+  Textarea
+components/ui/toggle-group.tsx
+  ToggleGroup
+  ToggleGroupItem
+components/ui/toggle.tsx
+  Toggle
+  toggleVariants
+components/ui/tooltip.tsx
+  Tooltip
+  TooltipTrigger
+  TooltipContent
+  TooltipProvider
+components/user-management.tsx
+  UserManagement
+components/view-only-alert.tsx
+  ViewOnlyAlert
+  ViewOnlyAlertProps
+debug-payments.js
+e2e/arbitration-correction.api.spec.ts
+e2e/arbitration-correction.ui.spec.ts
+e2e/fixtures/index.ts
+  expect
+  TestUser
+  TestCase
+  Fixtures
+  test
+e2e/global-teardown.ts
+  globalTeardown
+e2e/helpers/auth.ts
+  authenticatedPost
+  signInThroughUi
+e2e/playwright-database.ts
+  PlaywrightDatabaseConfig
+  loadPlaywrightEnv
+  getPlaywrightDatabaseConfig
+  getPlaywrightDatabaseAdminUrl
+  buildPlaywrightDatabaseUrl
+  isSafePlaywrightDatabaseAdminUrl
+  isSafePlaywrightDatabaseName
+  provisionPlaywrightDatabase
+  destroyPlaywrightDatabase
+  readPlaywrightDatabaseState
+examples/case-contacts-usage.ts
+  exampleCaseCreationWithContacts
+  getPartyContacts
+  addNewContact
+  updateExistingContact
+  manageContactsWorkflow
+  getContactsForNotification
+  validateAndCreateContact
+examples/email-usage.ts
+  handleUserRegistration
+  handlePasswordResetRequest
+  handleEmailVerificationRequest
+  handleContactFormSubmission
+  sendAccountUpdateNotification
+  sendMaintenanceNotification
+  sendCustomEmail
+  sendEmailWithRetry
+  scheduleWelcomeEmail
+generate-invitation-links.sql
+hooks/use-bulk-selection.ts
+  useBulkSelection
+hooks/use-dashboard-new.ts
+  DashboardConfig
+  UseDashboardReturn
+  useDashboard
+hooks/use-mobile.ts
+  useIsMobile
+hooks/use-party-data.ts
+  usePartyData
+  PartyDataContext
+  PartyDataContextType
+  Case
+  User
+  BankAccount
+hooks/use-quick-actions.ts
+  QuickActionsConfig
+  useQuickActions
+instrumentation-client.ts
+  onRouterTransitionStart
+instrumentation.ts
+  register
+  onRequestError
+lambda/sst-env.d.ts
+lambda/task-dispatcher/index.ts
+  TaskPayload
+  handler
+lambda/task-dispatcher/providers/smtp-provider.ts
+  SmtpConfig
+  SmtpProvider
+lambda/task-dispatcher/providers/types.ts
+  EmailMessage
+  EmailResponse
+lambda/task-dispatcher/task-router.ts
+  TaskModule
+  TaskRouter
+lambda/task-dispatcher/tasks/base-task-module.ts
+  BaseTaskModule
+lambda/task-dispatcher/tasks/email-tasks.ts
+  EmailTaskModule
+lambda/task-dispatcher/tasks/maintenance-tasks.ts
+  MaintenanceTaskModule
+lambda/task-dispatcher/tasks/nacha-tasks.ts
+  NachaTaskModule
+lambda/task-dispatcher/tasks/payment-reminder-tasks.ts
+  PaymentReminderTaskModule
+lambda/task-dispatcher/tasks/record-update-tasks.ts
+  RecordUpdateTaskModule
+lambda/task-dispatcher/tasks/report-tasks.ts
+  ReportOptions
+  ReportResult
+  ReportTaskModule
+lambda/task-dispatcher/utils/config.ts
+  getConfig
+  resetConfig
+  validateConfig
+  getLogLevel
+  getDatabaseUrl
+  getEmailProvider
+  getSendGridApiKey
+  getSendGridFromEmail
+  getSendGridFromName
+  getSendGridReplyToEmail
+  getSendGridPaymentsFromEmail
+  getSendGridCcEmail
+lambda/task-dispatcher/utils/logger.ts
+  LogLevel
+  LogContext
+  Logger
+lambda/task-dispatcher/utils/metrics.ts
+  TaskBatchMetrics
+  TaskMetricsData
+  SqsRecordFailureMetric
+  TaskMetrics
+lambda/task-dispatcher/utils/monitoring.ts
+  AlertConfig
+  TaskDispatcherMonitoring
+lambda/task-dispatcher/utils/prisma.ts
+  getPrisma
+lambda/task-dispatcher/utils/task-scheduler.ts
+  ScheduleTaskOptions
+  TaskTriggerResult
+  TaskScheduler
+lib/ach-utils.ts
+  maskAccountNumber
+  maskRoutingNumber
+  getAchStatusDisplay
+  formatAccountType
+lib/actions/admin-closure-dashboard.ts
+  AdminClosureFilters
+  getAdminClosureQuickActionCounts
+  getAdminClosureCases
+lib/actions/admin-invitations.ts
+  ActionResult
+  listAdminInvitations
+  resendAdminInvitation
+lib/actions/admin-member-management.ts
+  adminSetGlobalOrganizationMember
+lib/actions/admin-reset-2fa.ts
+  resetUser2FA
+lib/actions/admin-users.ts
+  getAdminUsers
+lib/actions/admin.ts
+  inviteAdmin
+  validateInvitation
+  setupAdminAccount
+lib/actions/administrative-closure-draft.ts
+  getAdministrativeClosurePendingDraft
+lib/actions/administrative-closure-refund-utils.ts
+  PartyRefundResolution
+  resolvePartyRefundStatus
+lib/actions/administrative-closure.ts
+lib/actions/arbitration.ts
+  getArbitrationQuickActionCounts
+lib/actions/bank-setup.ts
+  BankAccountSetupData
+  setupBankAccountForParty
+  getUserBankAccounts
+  updateBankAccount
+lib/actions/cache.ts
+  invalidateCachePaths
+  invalidateByContext
+  invalidateCaseCache
+  invalidatePaymentCache
+lib/actions/case-review.ts
+  CaseReviewData
+  getCaseReviewData
+lib/actions/case.ts
+  createCase
+lib/actions/cms-invoice.ts
+  ActionResult
+  CreateCmsInvoiceData
+  createCmsInvoice
+  getCmsInvoices
+  getPendingCmsPayments
+lib/actions/documentation-checklist.ts
+  DocumentationChecklistData
+  ActionResult
+  getDocumentationChecklist
+  updateDocumentationChecklist
+  updateChecklistItem
+lib/actions/eligibility.ts
+  getEligibilityCases
+  getEligibilityQuickActionCounts
+  assignCase
+  updateCaseStatus
+lib/actions/email-history.ts
+  getEmailContentForAction
+  getEmailContentByJob
+  getCaseEmailActions
+  getCaseCompleteEmailHistory
+lib/actions/email-workflow.ts
+  handleMissingBankInfoInvoices
+  normalizeEmail
+  collectUniqueRecipients
+  collectPartyRecipientsForInvoice
+lib/actions/email.ts
+  sendContactFormEmail
+  sendNotificationEmail
+  sendPasswordResetEmail
+lib/actions/index.ts
+  admin
+  admin-member-management
+  case
+  eligibility
+  email
+  party-banking
+  party-dashboard
+  party-case-details
+  party-invoice-management
+  party-member-management
+  party-payments
+  party-financials
+  organization-bank-accounts
+  organization-invoices
+lib/actions/invitation-check.ts
+  checkPendingInvitations
+lib/actions/line-item-management.ts
+  ActionResult
+  removeLineItem
+  getLineItemRemovalPreview
+  getCaseActiveLineItems
+lib/actions/nacha-debug.ts
+  ActionResult
+  getNachaBatches
+  downloadNachaFile
+lib/actions/nacha-processing.ts
+lib/actions/organization-bank-accounts.ts
+  adminAddOrganizationBankAccount
+  adminApproveOrganizationBankAccount
+lib/actions/organization-check-refund-settings.ts
+  CheckRefundSettings
+  UpdateCheckRefundSettingsInput
+  ActionResult
+  updateOrganizationCheckRefundSettings
+  getOrganizationCheckRefundSettings
+lib/actions/organization-invitations.ts
+  getInvitationDetails
+  acceptOrganizationInvitation
+  rejectOrganizationInvitation
+lib/actions/organization-invoices.ts
+  adminCreateOrganizationInvoice
+lib/actions/organization-party-invitations.ts
+  invitePartyToOrganization
+  addPartyUserToOrganization
+lib/actions/organization-transfer.ts
+  updateCaseOwnershipForOrganizationOwnershipChange
+lib/actions/organization.ts
+  searchOrganizations
+  getOrganizations
+lib/actions/party-banking.ts
+  setRefundAccount
+  setDefaultAccount
+  deleteBankAccount
+lib/actions/party-case-details.ts
+  getCaseDetails
+lib/actions/party-dashboard.ts
+  PartyInvoiceDetails
+  checkBankingSetup
+  getPartyDashboardBankAccounts
+lib/actions/party-financials.ts
+  PartyPendingCase
+  adminGetPartyPendingInvoicesPage
+  getPartyPaymentOverview
+lib/actions/party-invitations.ts
+  listPartyInvitations
+  resendPartyInvitation
+  invitePartyToCase
+lib/actions/party-invoice-management.ts
+  updateInvoiceStatus
+  recordInvoicePayment
+lib/actions/party-member-management.ts
+  invitePartyUserToOrganization
+  updateMemberRole
+  removeMemberFromOrganization
+lib/actions/party-payments.ts
+  getCasesForPayment
+lib/actions/party-refunds.ts
+  PartyRefund
+  GetPartyRefundsResult
+  getPartyRefunds
+lib/actions/party-users.ts
+  PartyUserOrganization
+  PartyUserWithOrganizations
+  getPartyUsersWithOrganizations
+lib/actions/payment-approvals.ts
+  getPaymentsAwaitingFirstApproval
+  getPaymentsAwaitingSecondApproval
+  approvePaymentFirstStage
+lib/actions/payment-failure.ts
+  ActionResult
+  markPaymentAsFailed
+lib/actions/payment-reminder-actions.ts
+  ActionResult
+  createPaymentRemindersAction
+  stopPaymentRemindersForPartyAction
+  stopAllPaymentRemindersForCaseAction
+  processPaymentRemindersAction
+  getPaymentReminderStatusAction
+  getPaymentReminderLogsAction
+  checkPaymentCompletionAction
+lib/actions/payment.ts
+  ActionResult
+  PaymentFilters
+lib/actions/refund-processing.ts
+  triggerCapitolBridgeRefunds
+  triggerInternalDistributions
+lib/actions/reporting.ts
+  getCaseReturnReport
+  getArbitratorPerformanceReport
+lib/actions/send-admin-closure-emails-action.ts
+  ActionResult
+  sendAllAdminClosureEmails
+lib/actions/send-ineligibility-emails-action.ts
+  ActionResult
+  SendIneligibilityEmailsResult
+lib/actions/site-settings.ts
+  getSiteSettings
+  getRefundPayoutDays
+  updateSiteSettings
+lib/actions/stripe-customer-sync.ts
+  ActionResult
+  PaymentIntentData
+  CreatePaymentIntentParams
+  ensureStripeCustomer
+  createPaymentIntent
+  getPaymentIntentStatus
+  cancelPaymentIntent
+lib/actions/stripe-payment-test.ts
+  ActionResult
+  createStripePaymentIntentTest
+lib/actions/stripe-payment.ts
+  ActionResult
+  createStripePaymentIntent
+  confirmStripePayment
+lib/actions/task-dispatcher-actions.ts
+  sendEmailAction
+  sendBulkEmailsAction
+  sendNotificationAction
+  generateNachaFileAction
+  transmitNachaFileAction
+  generateReportAction
+  updateCaseStatusesAction
+  updatePaymentStatusesAction
+  batchUpdateRecordsAction
+  scheduleRecurringTaskAction
+  scheduleDelayedTaskAction
+  triggerImmediateTaskAction
+  processPendingEmailJobsAction
+  retryFailedEmailsAction
+lib/actions/test-email-otp.ts
+  setLastEmailOtp
+  getLastEmailOtp
+lib/actions/testing-role-switch.ts
+  switchTestingRole
+lib/actions/two-factor-reset.ts
+  resetTwoFactor
+  canResetTwoFactor
+lib/actions/two-factor.ts
+  checkTwoFactorStatus
+  enforceAdminTwoFactor
+lib/actions/upload.ts
+  getPresignedUploadUrlAction
+  uploadFileProxyAction
+  getDownloadUrlAction
+lib/actions/user-profile.ts
+  ActionResult
+  updateUserProfile
+  changePassword
+lib/actions/user.ts
+  getAssignableUsers
+lib/actions/utils/membership.ts
+  resolveMembership
+  getUserMemberships
+lib/admin-ach-actions.ts
+  ActionResult
+  AchDataForNacha
+  getAllCasesAchData
+  getCaseAchData
+lib/auth/client-utils.ts
+  RoleName
+  routePermissions
+  hasRoutePermission
+  getDefaultDashboardForRole
+  roleHierarchy
+  hasHigherAuthority
+  getAvailableRoles
+  checkClientPermission
+  getNavigationForRole
+  getManageableRoles
+  getClientDashboardPermissions
+  canAccessDashboard
+  getRoleDisplayName
+  getRoleDescription
+  isInternalRole
+  isPartyRole
+  isAdminRole
+  isPaymentRole
+  isArbitrationRole
+  refreshUserSession
+lib/auth/client.ts
+  signIn
+  signOut
+  signUp
+  useSession
+  authClient
+lib/auth/components.tsx
+  RequireRole
+  RequireAuth
+  ShowIfPermission
+  ShowForRoles
+  DashboardSection
+  NavItem
+  ActionButton
+  RoleSwitch
+  withRoleProtection
+  withAuth
+lib/auth/index.ts
+  authClient
+  signIn
+  signOut
+  signUp
+  useSession
+  RoleName
+  routePermissions
+  hasRoutePermission
+  getDefaultDashboardForRole
+  getNavigationForRole
+  getManageableRoles
+  checkClientPermission
+  getClientDashboardPermissions
+  canAccessDashboard
+  getRoleDisplayName
+  getRoleDescription
+  isInternalRole
+  isPartyRole
+  isAdminRole
+  isPaymentRole
+lib/auth/middleware-utils.ts
+  RoleName
+  isRoleName
+  routePermissions
+  hasRoutePermission
+  getDefaultDashboardForRole
+  getBasicRoleFromCookie
+  checkRoutePermissions
+lib/auth/permissions.ts
+  statement
+  ac
+  masterAdmin
+  party
+  arbitrator
+  arbitratorContractor
+  adminSupport
+  eligibilitySpecialist
+lib/auth/roles.ts
+  ADMIN_ROLES
+  CAPITOL_BRIDGE_PROTECTED_ROLES
+  AdminRoleName
+  INTERNAL_USER_ROLES
+  PARTY_USER_ROLES
+  InternalUserRole
+  PartyUserRole
+  isInternalUserRole
+  isPartyUserRole
+  ALL_ROLES
+  AllRoleName
+  isAdminRoleName
+  canCapitolBridgeAdminBanRole
+lib/auth/route-permissions-config.ts
+  RoleName
+  routePermissions
+  findMatchingRoute
+  hasRoutePermission
+lib/auth/route-protection.ts
+  RoleName
+  routePermissions
+  hasRoutePermission
+  getDefaultDashboardForRole
+  getNavigationForRole
+  hasHigherAuthority
+  getManageableRoles
+lib/auth/server.ts
+  auth
+lib/auth/session-cache.ts
+  getCachedSession
+  requireAuth
+lib/auth/testing-roles-storage.ts
+  setTemporaryTestingRole
+  getTemporaryTestingRole
+  clearTemporaryTestingRole
+  clearAllTemporaryTestingRoles
+  getOriginalUserRole
+lib/auth/utils.ts
+  RoleName
+  PermissionResource
+  PermissionAction
+  RoleStatements
+  AuthenticatedUser
+  AuthenticatedSession
+  getCurrentSession
+  getCurrentUser
+  requireAuth
+  requireRole
+  hasMinimumRole
+  hasPermission
+  canAccessCases
+  canAccessEligibility
+  canAccessArbitration
+  canAccessPayments
+  canAccessBanking
+  canAccessReports
+  canAccessCompany
+  canCloseAccounts
+lib/case-ach-actions.ts
+  CaseAchFormData
+  getCaseAchInfo
+  upsertCaseAchInfo
+  checkCaseAchRequirements
+lib/cms-utils.ts
+  CmsInvoiceStatus
+  CmsInvoice
+  CmsInvoicePaymentAllocation
+  PendingCmsPayment
+lib/config/banking.ts
+  VeraTruBankingConfig
+  veratruBanking
+  formatBankingInfo
+  getPaymentInstructionsText
+lib/constants/case-status.ts
+  CLOSURE_STATUSES
+  isCaseClosed
+lib/constants/cases.ts
+  ARBITRATION_ASSIGNABLE_STATUSES
+  CLOSED_CASE_STATUSES
+  isArbitrationAssignable
+  isClosedStatus
+  CASE_WORKFLOW_ORDER
+  getAllowedBackwardTransitions
+  canManuallyAdjustBackward
+  isValidBackwardTransition
+  getStatusWorkflowPosition
+lib/constants/pricing.ts
+  STRIPE_RATES
+  CASE_PRICING
+  REFUND_AMOUNTS
+  REFUND_PAYOUTS
+  calculateRefundAmount
+  calculateCasePaymentAmount
+  calculateCasePaymentAmountWithActiveItems
+lib/constants/roles.ts
+  REPORT_ACCESS_ROLES
+  ReportAccessRole
+  REPORT_ALLOWED_ROLES
+  ReportAllowedRole
+  CASE_BALANCE_REPORT_ROLES
+  CaseBalanceReportRole
+  DAILY_TRANSACTIONS_REPORT_ROLES
+  DailyTransactionsReportRole
+  CMS_PAYMENTS_ALLOWED_ROLES
+  OUTSTANDING_PAYMENTS_REPORT_ROLES
+  OutstandingPaymentsReportRole
+lib/constants/vt-support.ts
+  VT_SUPPORT_VIEW_ONLY_SECTIONS
+  VT_SUPPORT_NO_ACCESS_SECTIONS
+  VT_SUPPORT_FINANCIAL_CONTROLS
+  VT_SUPPORT_COMPANY_ACCESS
+  VT_SUPPORT_REPORT_ACCESS
+  isVtSupportViewOnly
+  isVtSupportNoAccess
+  isVtSupportRole
+lib/database/client.ts
+  prisma
+lib/database/index.ts
+  prisma
+lib/encryption.ts
+  encryptSensitiveData
+  decryptSensitiveData
+  decryptSensitiveDataOrThrow
+  decryptSensitiveDataAsync
+  isEncryptedData
+lib/events/emitters/audit-events.ts
+  emitSystemAudit
+  emitDataChangeAudit
+  emitSecurityAudit
+  emitComplianceAudit
+  emitCaseAudit
+  emitUserAudit
+  emitPaymentAudit
+  emitDocumentAudit
+  emitAdminActionAudit
+lib/events/emitters/case-events.ts
+  emitCaseStatusChanged
+  emitCaseAssigned
+  emitRFIRequested
+  emitRFIReceived
+  emitPaymentPending
+  emitCaseClosed
+  emitStatusChangeWithCaseData
+  emitAssignmentWithUserData
+  emitBatchCaseEvents
+  emitCaseLifecycleEvent
+lib/events/emitters/dashboard-events.ts
+  emitDashboardMetric
+  emitDashboardAlert
+  emitDashboardUpdate
+  emitSystemStatus
+  emitBusinessMetric
+  emitUserActivityMetric
+  emitDashboardPerformanceMetric
+  emitSecurityMetric
+  emitCaseMetric
+  emitPaymentMetric
+  emitEmailMetric
+  emitThresholdAlert
+  emitAlertResolved
+  emitComponentStatus
+lib/events/emitters/error-events.ts
+  emitApplicationError
+  emitDatabaseError
+  emitExternalServiceError
+  emitValidationError
+  emitSecurityError
+  emitCaseError
+  emitPaymentError
+  emitAuthError
+  emitApiError
+  emitDatabaseConnectionError
+  emitEmailServiceError
+lib/events/emitters/index.ts
+  emitCaseStatusChanged
+  emitCaseAssigned
+  emitRFIRequested
+  emitRFIReceived
+  emitPaymentPending
+  emitCaseClosed
+  emitStatusChangeWithCaseData
+  emitAssignmentWithUserData
+  emitBatchCaseEvents
+  emitCaseLifecycleEvent
+  emitUserAssignedCase
+  emitUserLogin
+  emitUserLoginFromRequest
+  emitUserLogout
+  emitSessionStarted
+  emitSessionEnded
+  emitSessionExtended
+  emitUserActivity
+  emitUserProfileUpdated
+  emitBatchUserEvents
+lib/events/emitters/system-events.ts
+  emitEmailSent
+  emitEmailFailed
+  emitEmailTemplateRendered
+  emitEmailTemplateError
+  emitEmailDelivered
+  emitEmailBounced
+  emitEmailOpened
+  emitEmailClicked
+  emitEmailRetry
+  emitEmailRetryExhausted
+  emitCacheInvalidated
+  emitEmailResult
+  emitBatchEmailEvents
+  emitPerformanceMetric
+  emitAuditEvent
+  emitSmartCacheInvalidation
+lib/events/emitters/user-events.ts
+  emitUserAssignedCase
+  emitUserLogin
+  emitUserLogout
+  emitSessionStarted
+  emitSessionEnded
+  emitSessionExtended
+  emitUserLoginFromRequest
+  emitUserActivity
+  emitUserProfileUpdated
+  emitBatchUserEvents
+  emitUserSessionEvent
+lib/events/index.ts
+  initializeEventSystem
+  getEventRegistry
+  emit
+  emitSync
+  subscribe
+  unsubscribe
+  getListenerCount
+  getEventNames
+  clearAll
+  resetEventSystem
+  events
+  setupEventSystem
+  EventRegistry
+  EVENT_NAMES
+lib/events/init.ts
+  ensureEventSystemInitialized
+  resetEventSystemInitialization
+  isEventSystemInitialized
+lib/events/initialization-validator.ts
+  InitializationResult
+  EventSystemInitializationValidator
+lib/events/registry.ts
+  EventRegistry
+lib/events/startup-validation.ts
+  StartupValidationConfig
+  StartupValidator
+  startupValidator
+  validateEventSystemOnStartup
+  createStartupValidationMiddleware
+lib/events/subscribers/audit-subscriber.ts
+  AuditSubscriber
+lib/events/subscribers/cache-subscriber.ts
+  CacheSubscriber
+lib/events/subscribers/case-subscriber.ts
+  CaseSubscriber
+lib/events/subscribers/dashboard-subscriber.ts
+  DashboardSubscriber
+lib/events/subscribers/email-delivery-subscriber.ts
+  EmailDeliverySubscriber
+lib/events/subscribers/email-template-subscriber.ts
+  EmailTemplateSubscriber
+lib/events/subscribers/error-tracking-subscriber.ts
+  ErrorTrackingSubscriber
+lib/events/subscribers/index.ts
+  CaseSubscriber
+  NotificationSubscriber
+  CacheSubscriber
+  PaymentSubscriber
+  PerformanceSubscriber
+  SessionSubscriber
+  UserActivitySubscriber
+  EmailTemplateSubscriber
+  EmailDeliverySubscriber
+  AuditSubscriber
+  SystemHealthSubscriber
+  ErrorTrackingSubscriber
+  DashboardSubscriber
+  registerDefaultSubscribers
+  caseSubscriber
+  notificationSubscriber
+  cacheSubscriber
+  paymentSubscriber
+  performanceSubscriber
+  sessionSubscriber
+lib/events/subscribers/notification-subscriber.ts
+  NotificationSubscriber
+lib/events/subscribers/payment-subscriber.ts
+  PaymentSubscriber
+lib/events/subscribers/performance-subscriber.ts
+  PerformanceSubscriber
+lib/events/subscribers/session-subscriber.ts
+  SessionSubscriber
+lib/events/subscribers/system-health-subscriber.ts
+  SystemHealthSubscriber
+lib/events/subscribers/user-activity-subscriber.ts
+  UserActivitySubscriber
+lib/events/types.ts
+  BaseEvent
+  CaseStatusChangedEvent
+  CaseCreatedEvent
+  CaseAssignedEvent
+  CaseRFIRequestedEvent
+  CaseRFIReceivedEvent
+  CasePaymentPendingEvent
+  CaseClosedEvent
+  UserAssignedCaseEvent
+  UserLoginEvent
+  UserLogoutEvent
+  SessionStartedEvent
+  SessionEndedEvent
+  SessionExtendedEvent
+  UserActivityEvent
+  UserProfileUpdatedEvent
+  EmailSentEvent
+  EmailFailedEvent
+  EmailTemplateRenderedEvent
+  EmailTemplateErrorEvent
+lib/file-upload-utils.ts
+  DocumentCreationData
+  createCaseDocument
+  getDocumentTypeFromField
+  getDocumentDescription
+  validateUploadedFile
+  validateUploadedFiles
+  validateManualFilePath
+  validateFileInput
+  normalizeUploadedFiles
+  normalizeFileInput
+  extractManualFilePath
+  extractCaseIdFromPath
+  generateTempCaseId
+  updateFilePathsForCase
+lib/hooks/case-status-hooks.ts
+  onCaseStatusChange
+lib/middleware/session-tracking.ts
+  trackLoginEvent
+  trackLogoutEvent
+  sessionTrackingMiddleware
+  extractSessionInfo
+lib/organizations/bank-accounts.ts
+  getOrganizationBankAccounts
+lib/organizations/financial-snapshots.ts
+  getOrganizationFinancialSnapshot
+lib/organizations/financial-types.ts
+  PaymentStatusToken
+  DualApprovalStatus
+  ApprovalActor
+  PendingRequestStatus
+  ApprovalFormStatus
+  AchApprovalForm
+  CaseBillingStatus
+  CaseBillingPriority
+  CaseForInvoice
+  OutstandingInvoiceRecord
+  AchAccountRole
+  AchAccount
+  CheckRefundSettings
+  OrganizationFinancialSnapshot
+lib/organizations/invoices.ts
+  getOrganizationInvoiceSnapshot
+lib/party-actions.ts
+  getPartyCases
+  getCaseDetails
+lib/payments/case-ledger.ts
+  CasePartyType
+  LedgerLane
+  LedgerPaymentEntry
+  MissingInvoiceEntry
+  CaseLedgerObligation
+  CaseLedgerTransactionRow
+  CaseLedgerPartySummary
+  CaseLedgerPartySection
+  CaseLedgerViewModel
+  getCaseLedgerObligation
+lib/payments/variance-actions.ts
+  VarianceActionInput
+  canCreateVarianceRefund
+  canCreateVarianceInvoice
+lib/payments/variance-reconciliation.ts
+  VarianceType
+  VarianceReconciliationEntry
+  VarianceReconciliationResult
+  calculateSupplementalPaymentVariance
+  reconcileGroupedVarianceEntries
+lib/pdf-parser.ts
+  parsePDF
+lib/posthog/server.ts
+  posthogClient
+  isFeatureFlagEnabled
+lib/reports/due-dates.ts
+  DueDateRangePreset
+  DueDatesSortBy
+  DueDatesSortOrder
+  DueDatesUrgency
+  DueDatesFilters
+  DueDatesSort
+  DueDateSummary
+  DueDateComputedFields
+  ProcessedDueDateCase
+  parseDueDatesFilters
+  parseDueDatesSort
+  buildDueDatesWhereClause
+  buildDueDatesOrderBy
+  DUE_DATES_CASE_SELECT
+  DUE_DATES_LIGHT_SELECT
+  DueDatesCaseRow
+  DueDatesLightRow
+  computeDueDateFields
+lib/reports/idrePayouts.ts
+  getIdrePayouts
+lib/s3.js
+  s3Client
+lib/services/administrative-closure.ts
+  PartySide
+  CaseFinancialState
+  DispositionEntry
+  AdministrativeClosureDisposition
+  loadCaseFinancialState
+  computeAdministrativeClosureDispositionFromState
+lib/services/case.ts
+  CaseWithDetails
+lib/services/due-date-service.ts
+  DueDateCalculationResult
+  calculateInitialDueDates
+  calculateDueDateForStatusChange
+  updateCaseDueDates
+  setInitialCaseDueDates
+  handleStatusChangeDueDates
+  getOverdueCases
+  getCasesApproachingDecisionDeadline
+lib/services/email-history.ts
+  EmailContent
+  CaseActionEmailInfo
+  getEmailContentByJobId
+  getEmailContentForCaseAction
+  getCaseActionsWithEmails
+  getCaseEmailHistory
+lib/services/email/config.ts
+  EmailConfig
+  EmailSenderType
+  emailConfig
+  validateEmailConfig
+  getSenderEmail
+  getSenderTypeForEmailType
+lib/services/email/email-job-service.ts
+  IDREmailTemplateData
+  EmailTemplateData
+  EmailJobData
+  createEmailJob
+  processEmailJob
+lib/services/email/index.ts
+  EmailService
+  emailService
+  emailConfig
+  validateEmailConfig
+  default
+lib/services/email/service.ts
+  EmailService
+lib/services/email/templates.ts
+  createBaseTemplate
+  createWelcomeTemplate
+  createPasswordResetTemplate
+  createEmailVerificationTemplate
+  createContactFormTemplate
+lib/services/email/templates/idr/agreement-templates.ts
+  createDocumentationLieuTemplate
+  createAgreementAck1Template
+  createAgreementAdditionalInfoTemplate
+  createAgreementAck2Template
+lib/services/email/templates/idr/base.ts
+  IDRBaseTemplateConfig
+  createIDRBaseTemplate
+lib/services/email/templates/idr/components.ts
+  createResourcesSection
+  createContactInformationSection
+  createDisputeStatusSection
+  createReferenceNumberSection
+  substituteFields
+  getRecipientEmails
+lib/services/email/templates/idr/index.ts
+  createIDREmailTemplate
+  validateIDRTemplateData
+  createAdminFeeRequestTemplate
+  createNonPaymentBothTemplate
+  createPaymentConfirmationTemplate
+  createNonPaymentOneTemplate
+  createPaymentReminder1Template
+  createPaymentReminder2Template
+  createPaymentReminderDailyTemplate
+  createReissuedPaymentRequestTemplate
+  createEntityFeeRefundTemplate
+  createUnderpaymentInvoiceTemplate
+  createDocumentationLieuTemplate
+  createAgreementAck1Template
+  createAgreementAdditionalInfoTemplate
+  createAgreementAck2Template
+  createDisputeNotEligibleTemplate
+  createRequestAdditionalInfoTemplate
+  createAdditionalInfoReceivedTemplate
+  createFinalDeterminationTemplate
+lib/services/email/templates/idr/payment-templates.ts
+  createAdminFeeRequestTemplate
+  createNonPaymentBothTemplate
+lib/services/email/templates/idr/preview.ts
+  sampleIDRData
+lib/services/email/templates/idr/process-templates.ts
+  createDisputeNotEligibleTemplate
+  createRequestAdditionalInfoTemplate
+  createAdditionalInfoReceivedTemplate
+  createFinalDeterminationTemplate
+lib/services/email/templates/idr/test-utils.ts
+  IDRTemplateTestResult
+  testIDRTemplate
+  testAllIDRTemplates
+  generateTestReport
+  quickValidationTest
+  performanceTest
+lib/services/email/templates/idr/types.ts
+  IDRPartyType
+  IDREmailSender
+  IDRTemplateData
+  IDRPaymentTemplateData
+  IDRAgreementTemplateData
+  IDRInfoRequestTemplateData
+  IDRDeterminationTemplateData
+  IDRDeterminationCorrectedTemplateData
+  IDREmailTemplateConfig
+  IDR_TEMPLATE_CONFIGS
+lib/services/email/types.ts
+  EmailAddress
+  EmailAttachment
+  EmailTemplate
+  EmailOptions
+  EmailResponse
+  EmailTemplateData
+  EmailType
+  EmailLog
+lib/services/email/utils.ts
+  sendWelcomeEmailToUser
+  sendPasswordResetEmailToUser
+  sendEmailVerificationToUser
+  sendContactFormSubmission
+  sendNotificationToUser
+  sendOrganizationMembershipEmail
+  sendIPWelcomeEmail
+  sendBulkNotifications
+lib/services/final-eligibility-payment-correction.ts
+  FinalEligibilityPaymentCorrectionAllocation
+  FinalEligibilityPaymentCorrectionCaseInput
+  FinalEligibilityPaymentCorrectionPartySummary
+  FinalEligibilityPaymentCorrectionAnalysis
+  FinalEligibilityPaymentCorrectionCsvRow
+  analyzeFinalEligibilityPaymentCorrectionCase
+  buildFinalEligibilityPaymentCorrectionCsv
+lib/services/index.ts
+  case
+  administrative-closure
+lib/services/line-item-service.ts
+  FeeImpact
+  CaseTypeConversionPreview
+  previewCaseTypeConversion
+  LineItemRemovalResult
+  LineItemRemovalPreview
+  getActiveLineItems
+  getAllLineItems
+  previewLineItemRemoval
+  validateLineItemRemoval
+lib/services/nacha/banking-utils.ts
+  isBankingDay
+  getNextBankingDay
+  addBankingDays
+  calculateEffectiveDate
+  formatDateForNacha
+  formatDateTimeForNacha
+  validateEffectiveDate
+  isWithinProcessingWindow
+  getNextProcessingTime
+lib/services/nacha/index.ts
+  NachaService
+  NachaSftpClient
+  createMTBankConfig
+  getMTBRoutingNumber
+  MTB_ROUTING_NUMBERS
+  validatePayrollTransaction
+  validateVendorPayment
+  validateRoutingNumber
+  formatAmountForNacha
+  formatAccountType
+  calculateEffectiveDate
+  formatDateForNacha
+  validateEffectiveDate
+  isBankingDay
+  getNextBankingDay
+  addBankingDays
+lib/services/nacha/mtb-config.ts
+  MTB_ROUTING_NUMBERS
+  MTB_PROCESSING_TIMES
+  MTB_LEAD_TIMES
+  createMTBankConfig
+  getMTBRoutingNumber
+  validateMTBConfig
+lib/services/nacha/nacha-service.ts
+  NachaService
+lib/services/nacha/sftp-client.ts
+  NachaSftpClient
+lib/services/nacha/types.ts
+  NachaTransaction
+  NachaFileConfig
+  NachaBatchConfig
+  PayrollTransaction
+  VendorPayment
+  PaymentDirection
+  NachaFailedPayment
+  NachaFileResult
+  TransmissionResult
+  MTBankConfig
+  TransactionType
+  SECCode
+  AccountType
+  NachaValidationError
+  FileStatus
+lib/services/nacha/validation.ts
+  NachaTransactionSchema
+  PayrollTransactionSchema
+  VendorPaymentSchema
+  CompanyConfigSchema
+  validateRoutingNumber
+  validateNachaTransaction
+  validatePayrollTransaction
+  validateVendorPayment
+  validateCompanyConfig
+  formatAmountForNacha
+  formatAccountType
+lib/services/party-user-service.ts
+  getPartyUsersForCase
+lib/services/payment-reminder-service.ts
+  PaymentReminderConfig
+  ReminderSchedule
+  createPaymentReminder
+  checkPaymentCompletionForReminder
+  stopPaymentReminder
+  stopPaymentRemindersForParty
+  stopAllPaymentRemindersForCase
+  getDuePaymentReminders
+  processPaymentReminder
+lib/services/payment.ts
+  CreatePaymentData
+  UpdatePaymentData
+  PaymentService
+lib/services/refund-service.ts
+  AutoApprovalCheckResult
+  canAutoApproveDistributions
+  canApprovePartyRefund
+lib/services/system-health-monitor.ts
+  HealthCheckResult
+  ResourceMetrics
+  SystemHealthMonitor
+lib/services/task-dispatcher-client.ts
+  TaskTriggerResult
+  TaskDispatcherConfig
+  TaskDispatcherClient
+lib/shared/utils/assignmentErrors.ts
+  getAssignmentErrorMessage
+lib/stripe/config.ts
+  stripe
+  validateStripeConfig
+  STRIPE_CONFIG
+lib/test-prisma.ts
+  testPrismaClient
+lib/testing/e2e-route-guard.ts
+  E2E_TEST_SECRET_HEADER
+  validateE2ETestRouteAccess
+lib/types/file-upload.ts
+  UploadedFile
+  ManualFilePath
+  FileUploadResult
+  FileUploadProgress
+  FileInput
+lib/types/invitations.ts
+  AdminInvitationSummary
+  PartyInvitationSummary
+lib/types/pagination.ts
+  PaginationParams
+  PaginationInfo
+  PaginatedResponse
+  PaginatedActionResult
+  DashboardFilters
+  CaseFilters
+  GeneralCaseFilters
+  DashboardFiltersWithPagination
+  AdminClosureFilters
+  convertDashboardFiltersToCase
+  convertDashboardFiltersToGeneral
+  convertDashboardFiltersToAdminClosure
+  DEFAULT_PAGINATION
+  PAGINATION_LIMITS
+  calculatePaginationInfo
+  calculateSkipTake
+  validatePaginationParams
+  createSearchParams
+  parseSearchParams
+lib/types/shared-enums.ts
+  CaseStatus
+  PaybackCause
+  CasePriority
+  DisputeType
+  CaseClosureReason
+lib/user-actions.ts
+  checkUserType
+  DashboardContext
+  getAssignableUsers
+lib/utils/admin-closure-permissions.ts
+  AdminClosurePermissions
+  getAdminClosurePermissions
+  canAccessAdminClosureDashboard
+lib/utils/admin-closure.ts
+  isAdministrativeClosureAllowed
+lib/utils/arbitration-permissions.ts
+  ArbitrationPermissions
+  getArbitrationPermissions
+  checkArbitrationPermission
+  filterCasesForArbitrator
+  requireArbitrator
+  getArbitratorPermissionLevel
+lib/utils/banking-display.ts
+  isMaskedValue
+  getMaskedDisplayValue
+lib/utils/business-day-utils.ts
+  getFederalHolidays
+  observe
+  getObservedFederalHolidays
+  isWeekend
+  isFederalHoliday
+  isBusinessDay
+  getNextBusinessDay
+  addBusinessDays
+  getBusinessDaysBetween
+  isBusinessDateTime
+  calculateRFIDueDate
+  formatRFIDueDateForEmail
+  normalizeToStartOfDay
+  normalizeToEndOfDay
+lib/utils/case-wizard-schema.ts
+  step1Schema
+  step2Schema
+  step3Schema
+  step4Schema
+  step5Schema
+  step6Schema
+  stepOrganizationSchema
+  caseWizardSchema
+  Step1Data
+  StepOrganizationData
+  Step2Data
+  Step3Data
+  Step4Data
+  Step5Data
+  Step6Data
+  CaseWizardFormData
+lib/utils/case-wizard-types.ts
+  ContactInfo
+  PartyInfo
+  LineItem
+  CaseWizardData
+  INITIATOR_OPTIONS
+  DISPUTE_TYPE_OPTIONS
+  US_STATES
+lib/utils/date-utils.ts
+  safeConvertToDate
+  createUTCDate
+  formatDateSafe
+  isValidDate
+  getESTDayBounds
+  formatDateInEST
+  formatTimeInEST
+lib/utils/documentation-checklist.ts
+  isDocumentationChecklistEditable
+  DOCUMENTATION_CHECKLIST_EDITABLE_STATUSES
+lib/utils/due-date-utils.ts
+  DueDateStatus
+  getDueDateLabel
+  getDueDateStatus
+  getDueDateUrgencyClasses
+lib/utils/eligibility-permissions.ts
+  EligibilityPermissions
+  getEligibilityPermissions
+  checkEligibilityPermission
+  filterCasesForUser
+  requireEligibilitySpecialist
+lib/utils/enum-helpers.ts
+  BadgeVariant
+  StatusDisplayInfo
+  getEnumValues
+  isValidEnumValue
+  getEnumKey
+  formatEnumValue
+  formatClosureReason
+  getClosedAdministrativeStatusLabel
+  getCaseTypeDisplay
+  resolveDisputeType
+  getCaseTypeBadgeVariant
+  EligibilityStatuses
+  isEligibilityStatus
+lib/utils/general-case-permissions.ts
+  GeneralCasePermissions
+  getGeneralCasePermissions
+  canViewCaseInGeneralDashboard
+lib/utils/index.ts
+  cn
+  formatCurrency
+lib/utils/internal-banking.ts
+  InternalPayeeKey
+  getInternalBankingSnapshot
+lib/utils/invitation-serializers.ts
+  AdminInvitationRecord
+  serializeAdminInvitation
+  PartyInvitationRecord
+  serializePartyInvitation
+lib/utils/invoice-email.ts
+  InvoiceEmailCaseEntry
+  BuildInvoiceEmailParams
+  BuildInvoiceEmailOptions
+  buildInvoiceNumber
+  buildInvoiceEmailHtml
+lib/utils/number-utils.ts
+  DecimalLike
+  decimalToNumber
+lib/utils/party-access.ts
+  getUserPartyType
+  hasAccessToCase
+lib/utils/party-rendering.tsx
+  formatContactType
+  PartySection
+lib/utils/payment-banking-validation.ts
+  PARTY_REFUND_TYPES
+  isPartyRefundType
+  validateRefundBankingInfo
+lib/utils/payment-utils.ts
+  PAYMENT_STATUS_LABELS
+  PAYMENT_TYPE_LABELS
+  PAYMENT_STATUS_COLORS
+  getPaymentStatusLabel
+  getPaymentTypeLabel
+  getPaymentStatusColor
+  canTransitionPaymentStatus
+  getNextAllowedStatuses
+  isPaymentFinal
+  isPaymentActive
+  formatPaymentAmount
+lib/utils/pdf-export.ts
+  InvoiceData
+lib/utils/performance-monitoring.ts
+  PerformanceTimer
+  measureDatabaseQuery
+  measureApiEndpoint
+  emitMemoryUsage
+  emitCacheHitRate
+  emitComponentHealth
+  emitError
+  withPerformanceMonitoring
+  emitPerformanceBatch
+  startSystemHealthMonitoring
+lib/utils/report-calculations.ts
+  DateFilter
+  CaseFilter
+  HistoricalComparison
+  calculateProcessingTime
+  calculateStatusDuration
+  calculateHistoricalComparison
+  calculateSuccessRate
+  calculateAppealRate
+  getDateRanges
+lib/utils/rfi-priority-utils.ts
+  shouldElevateInitialRFIPriority
+  calculateRFIPriority
+  isInitialEligibilityRFI
+  isFinalEligibilityRFI
+  isRFICase
+  getRFIStatusForWorkflow
+  getRFIDisplayInfo
+lib/utils/routing-validation.ts
+  validateABARoutingNumber
+lib/utils/server-status-transitions.ts
+  getValidStatusTransitionsForUser
+lib/utils/short-id.ts
+  generateShortId
+  generateUniqueShortId
+lib/utils/status-transitions.ts
+  getValidEligibilityStatusTransitions
+  getValidArbitrationStatusTransitions
+  getValidGeneralStatusTransitions
+lib/utils/stripe-fees.ts
+  calculateChargeAmount
+  calculateCreditCardFee
+  calculateTotalWithFee
+  formatFeeBreakdown
+lib/utils/user-activity-tracking.ts
+  trackCaseActivity
+  trackPaymentActivity
+  trackDocumentActivity
+  trackNavigationActivity
+  trackProfileActivity
+middleware.ts
+  middleware
+  config
+next.config.ts
+  default
+playwright.config.ts
+  default
+prisma/migrations/20250711120637_init/migration.sql
+prisma/migrations/20250711120714_remove/migration.sql
+prisma/migrations/20250711121306_add_better_auth/migration.sql
+prisma/migrations/20250711133102_add_organizations/migration.sql
+prisma/migrations/20250711134352_add_admin/migration.sql
+prisma/migrations/20250711135920_add_org/migration.sql
+prisma/migrations/20250713210851_remove_organziation/migration.sql
+prisma/migrations/20250714133538_create_initial_schemas_for_cases/migration.sql
+prisma/migrations/20250714162835_add_payments/migration.sql
+prisma/migrations/20250714195159_add_admin_invitations/migration.sql
+prisma/migrations/20250715004600_add_health_plan_to_initiator_enum/migration.sql
+prisma/migrations/20250715022343_add_eligibility_dashboard_schema/migration.sql
+prisma/migrations/20250716121217_migrate_after_merge_main/migration.sql
+prisma/migrations/20250716145413_remove_banking_info_model/migration.sql
+prisma/migrations/20250716192716_enhance_payment_schema/migration.sql
+prisma/migrations/20250716212322_case_contacts/migration.sql
+prisma/migrations/20250717051009_add_arbitration_decisions/migration.sql
+prisma/migrations/20250717054313_rename_parttype_to_partytype/migration.sql
+prisma/migrations/20250717145137_manual_doc_paths/migration.sql
+prisma/migrations/20250717191850_add_user_banking_info/migration.sql
+prisma/migrations/20250717201825_add_multiple_bank_accounts/migration.sql
+prisma/migrations/20250718190239_payment_updates/migration.sql
+prisma/migrations/20250718204633_plaid/migration.sql
+prisma/migrations/20250720202258_add_missing_bank_account_fields/migration.sql
+prisma/migrations/20250721015703_rename_created_to_initial_eligibility_review/migration.sql
+prisma/migrations/20250721195600_remove_health_plan_type_enum/migration.sql
+prisma/migrations/20250722141427_remove_direction_and_add_refund_designation/migration.sql
+prisma/migrations/20250722210054_remove_plaid/migration.sql
+prisma/migrations/20250722214919_stripe_stuff/migration.sql
+prisma/migrations/20250722230956_customer_id/migration.sql
+prisma/migrations/20250722232307_add_stripe_customer_table/migration.sql
+prisma/migrations/20250723142959_upgarde/migration.sql
+prisma/migrations/20250723175444_add_search_optimization_indexes/migration.sql
+prisma/migrations/20250724001737_add_payment_enhancements/migration.sql
+prisma/migrations/20250724112505_remove_partially_paid_status/migration.sql
+prisma/migrations/20250724112636_update_after_payment_seed/migration.sql
+prisma/migrations/20250724125327_remove_payment_dispute_line_item_relationship/migration.sql
+prisma/migrations/20250725133744_add_nacha_batch_s3_fields/migration.sql
+prisma/migrations/20250725174521_add_payment_approval_and_party_invitation_system/migration.sql
+prisma/migrations/20250726145553_add_memo_field_to_payment/migration.sql
+prisma/migrations/20250728135215_redesign_payment_schema/migration.sql
+prisma/migrations/20250728141622_cleanup_legacy_payment_fields/migration.sql
+prisma/migrations/20250728182403_add_include_on_nacha_field/migration.sql
+prisma/migrations/20250728193000_simplify_payment_status_enum/migration.sql
+prisma/migrations/20250729170808_make_dispute_number_required/migration.sql
+prisma/migrations/20250729192644_add_documentation_checklist/migration.sql
+prisma/migrations/20250729214739_add_comprehensive_due_dates/migration.sql
+prisma/migrations/20250731000000_change_typeOfDispute_to_enum/migration.sql
+prisma/migrations/20250806000000_remove_note_visibility/migration.sql
+prisma/migrations/20250808161158_add_site_settings/migration.sql
+prisma/migrations/20250808210532_add_case_refunds/migration.sql
+prisma/migrations/20250812111850_remove_paid_status/migration.sql
+prisma/migrations/20250813152607_cents_constraint/migration.sql
+prisma/migrations/20250814121855_add_case_priority_and_arbitration_return_tracking/migration.sql
+prisma/migrations/20250814201817_add_case_performance_indexes/migration.sql
+prisma/migrations/20250815141606_add_cms_invoice_management/migration.sql
+prisma/migrations/20250815185029_add_relation/migration.sql
+prisma/migrations/20250818145758_add_better_auth_orgs/migration.sql
+prisma/migrations/20250818150237_add_organization_invoicing_system/migration.sql
+prisma/migrations/20250818155141_add_invoice_payment_tracking/migration.sql
+prisma/migrations/20250820214700_update_to_2_org_structure/migration.sql
+prisma/migrations/20250822132604_make_invoice_number_unique/migration.sql
+prisma/migrations/20250822174412_unique_organization_memberships/migration.sql
+prisma/migrations/20250825171420_add_split_decision_enum_value/migration.sql
+prisma/migrations/20250825171610_remove_no_award_enum_value/migration.sql
+prisma/migrations/20250826000000_add_split_decision_to_arbitration_decision/migration.sql
+prisma/migrations/20250828200802_add_banking_agreement_signature_fields/migration.sql
+prisma/migrations/20250829012457_add_threaded_notes_and_soft_delete/migration.sql
+prisma/migrations/20250903165228_add_pending_initial_rfi_status/migration.sql
+prisma/migrations/20250905134529_add_tfa/migration.sql
+prisma/migrations/20250911000000_add_missing_case_action_types/migration.sql
+prisma/migrations/20250912125922_org_adjustments/migration.sql
+prisma/migrations/20250912194230_update_stuff/migration.sql
+prisma/migrations/20250914232401_administrative_closure/migration.sql
+prisma/migrations/20250916230823_add_pending_admin_closure/migration.sql
+prisma/migrations/20250917233132_remove_fees_not_paid/migration.sql
+prisma/migrations/20250918150021_multi_org_support_for_a_user/migration.sql
+prisma/migrations/20250918151243_updates/migration.sql
+prisma/migrations/20250918221208_make_dispute_reference_number_unique/migration.sql
+prisma/migrations/20250925035841_add_pending_closure_payments_status/migration.sql
+prisma/migrations/20250925040100_add_new_closure_reasons/migration.sql
+prisma/migrations/20250927114753_add_soft_delete_migration/migration.sql
+prisma/migrations/20250927115855_update_org_financial_management/migration.sql
+prisma/migrations/20251001131116_add_ineligible_status/migration.sql
+prisma/migrations/20251001225608_invoice_types/migration.sql
+prisma/migrations/20251003041523_add_cancelled_failed_payment_status/migration.sql
+prisma/migrations/20251003190000_fix_ineligible_migration_add_pending_closure_payments/migration.sql
+prisma/migrations/20251007151342_org_user_share/migration.sql
+prisma/migrations/20251008122135_allow_user_id_invoices/migration.sql
+prisma/migrations/20251014025307_add_ineligible_pending_admin_fee_status/migration.sql
+prisma/migrations/20251027180000_add_dispute_line_item_soft_delete_fields/migration.sql
+prisma/migrations/20251031_add_short_id_field/migration.sql
+prisma/migrations/20251104000000_add_closed_default_ip_nip_statuses/migration.sql
+prisma/migrations/20251112162100_add_check_refund_fields/migration.sql
+prisma/migrations/20251119000000_add_line_item_added_action_type/migration.sql
+prisma/migrations/20251119000000_add_payment_composite_indexes/migration.sql
+prisma/migrations/20251119010000_add_closed_split_decision_status/migration.sql
+prisma/migrations/20251126231311_add_organization_name_unique_constraint/migration.sql
+prisma/migrations/20251211190654_missing_fields/migration.sql
+prisma/migrations/20251211215014_index_on_payment_records_for_loading/migration.sql
+prisma/migrations/20251229183031_remove_cb_entity_fee_transfer/migration.sql
+prisma/migrations/20260108194825_add_created_by_to_the_case/migration.sql
+prisma/migrations/20260115000000_add_new_admin_closure_reasons/migration.sql
+prisma/migrations/20260219120000_add_due_dates_report_indexes/migration.sql
+prisma/migrations/20260302000000_add_payment_query_indexes/migration.sql
+prisma/migrations/20260302153000_add_case_created_to_case_action_type_enum/migration.sql
+prisma/migrations/20260317000000_add_idre626_case_action_types/migration.sql
+prisma/migrations/20260320000000_add_refund_idempotency_keys/migration.sql
+prisma/migrations/20260323000000_add_idre634_correction_enums/migration.sql
+prisma/migrations/20260325001559_add_payback_cause_and_action_types/migration.sql
+prisma/schema.prisma
+  User
+  StripeCustomer
+  Session
+  Account
+  Verification
+  BankAccount
+  BankAccountApproval
+scripts/IDRE-320report_dispute_fees.sql
+scripts/_env-guard.ts
+  requireEnvConfirmation
+scripts/advance-fully-paid-cases-to-final-eligibility-review.ts
+scripts/backfill-banking-masks.ts
+scripts/backfill-final-determination-rendered.ts
+scripts/backfill-refund-banking-info.ts
+  backfillRefundBankingInfo
+scripts/backfill-short-ids.ts
+scripts/check-duplicate-memberships.ts
+scripts/check-nacha-field.ts
+scripts/check_flipped.sql
+scripts/check_refunds_and_payments.sql
+scripts/cleanup-closed-case-due-dates.ts
+scripts/cleanup-duplicate-memberships.ts
+scripts/convert-cb-entity-fee-transfers.ts
+scripts/create-arbitration-test-data.ts
+  createArbitrationTestData
+scripts/create-multi-org-test-user.ts
+scripts/create_missing_vendor_refunds.ts
+scripts/debug-permissions.ts
+scripts/deploy-task-dispatcher.ts
+  TaskDispatcherDeployment
+  parseArgs
+  printUsage
+scripts/dispute_cases_query.sql
+scripts/email-status.ts
+scripts/find-affected-cases.ts
+scripts/find-nacha-discrepancies.sql
+scripts/find_cases_past_payments_with_missing_payments.sql
+scripts/find_cases_with_both_payments_pending.sql
+scripts/find_cases_with_single_case_payment_allocation.sql
+scripts/find_pending_rfi_payment_counts.sql
+scripts/find_unpaid_uhc_domain_disputes.sql
+scripts/fix-duplicate-invoice-numbers.ts
+scripts/fix-flipped-refund-banking-snapshots.ts
+  preloadOrganizationAndBankCaches
+  getOrganizationLite
+  getBankAccountLite
+  buildBankingSnapshot
+  OrganizationLite
+  BankAccountLite
+  CsvRow
+scripts/fix-idre-567-ip-org-mapping.ts
+scripts/fix-ineligible-cases.ts
+  MigrationStats
+  CasePaymentInfo
+  isPaymentCompleted
+  getCasePaymentInfo
+  updateCaseStatus
+  fixIneligibleCases
+scripts/generate-nacha-penny-test.ts
+scripts/get-arbitration-case.ts
+scripts/get-test-case-id.ts
+scripts/get_capitol_bridge_fees.ts
+scripts/idre-595-line-item-corrections.ts
+scripts/init-site-settings.ts
+  initSiteSettings
+scripts/migrate-encryption-key.ts
+scripts/migrate-no-award-to-split-decision.ts
+  migrateNoAwardToSplitDecision
+scripts/migrate-payment-data.ts
+scripts/migrate-payment-status.ts
+scripts/process-pending-emails.ts
+scripts/rebuild-internal-refund-snapshots.ts
+scripts/remediate-missing-internal-payouts.ts
+scripts/resolve-migration.ts
+scripts/retry-failed-emails.ts
+scripts/run-playwright.ts
+scripts/send-admin-closure-emails.ts
+scripts/send-all-email-templates.ts
+scripts/send-ineligibility-notice.ts
+scripts/setup-payment-reminder-schedule.ts
+  setupPaymentReminderSchedule
+scripts/setup-sst-secrets.ts
+scripts/show-checklist-cases.ts
+scripts/smoke-function-url-cases.ts
+scripts/smoke-task-dispatcher-url.ts
+scripts/test-admin-closure-with-payments.ts
+scripts/test-administrative-closure-e2e.ts
+scripts/test-administrative-closure-matrix.ts
+scripts/test-administrative-closure.ts
+scripts/test-bulk-operations.ts
+scripts/test-case-file-upload.ts
+  CaseFileUploadTester
+scripts/test-cc-emails.ts
+scripts/test-documentation-checklist.ts
+scripts/test-email-provider.ts
+scripts/test-email.ts
+  testEmailConfiguration
+  testWelcomeEmail
+  testPasswordResetEmail
+  testEmailVerification
+  testNotificationEmail
+  testCustomEmail
+  runAllTests
+scripts/test-http-errors.ts
+scripts/test-index-performance.ts
+scripts/test-line-item-guard-rails.ts
+scripts/test-migration-sql.ts
+scripts/test-multi-org-payment-fix.ts
+scripts/test-nacha-basic-s3.ts
+scripts/test-nacha-no-sftp.ts
+scripts/test-nacha-s3.ts
+scripts/test-nacha-toggle.ts
+scripts/test-nacha.ts
+scripts/test-overdue-filter.ts
+scripts/test-refund-delay-config.ts
+scripts/test-refund-email.ts
+scripts/test-refund-timing.ts
+scripts/test-reissued-email-fees.ts
+scripts/test-rendering-performance.ts
+scripts/test-search-performance.ts
+scripts/test-single-membership.ts
+scripts/test-smtp.ts
+scripts/test-task-router-duplicates.ts
+scripts/test-upload.ts
+  UploadTester
+scripts/test-withdrawal-settlement-fees.ts
+scripts/unpaid_disputes_report.sql
+scripts/update_cases_status_based_on_payments.sql
+scripts/update_cases_to_final_eligibility.sql
+scripts/validate-arbitration-models.ts
+scripts/validate-event-system-init.ts
+scripts/validate-permissions.ts
+scripts/verify-internal-payouts.ts
+scripts/verify-short-ids.ts
+seeds/admin-users.ts
+  seedAdminUsers
+seeds/bank-accounts.ts
+  seedBankAccounts
+seeds/cases.ts
+seeds/config.ts
+  SEEDING_CONFIG
+  SeedingConfig
+seeds/data/healthcare-services.ts
+  HEALTHCARE_SERVICE_TYPES
+  COMMON_CPT_CODES
+  PLACE_OF_SERVICE_CODES
+  HEALTHCARE_PLAN_NAMES
+  PROVIDER_SPECIALTIES
+seeds/factories/bank-account.factory.ts
+  CreateBankAccountOptions
+  createBankAccountData
+  createPartyBankAccount
+seeds/factories/case-document.factory.ts
+  CreateCaseDocumentOptions
+  createCaseDocumentData
+  createProofOfNegotiationDocument
+  createPaymentDocumentation
+  createInitiationNotice
+seeds/factories/case-party.factory.ts
+  CreateCasePartyOptions
+  createCasePartyData
+  createHealthcarePlan
+  createHealthcareProvider
+seeds/factories/case.factory.ts
+  CreateCaseOptions
+  createCaseData
+  createCaseWithParties
+  createRecentCase
+  createCaseWithStatus
+seeds/factories/dispute-line-item.factory.ts
+  CreateDisputeLineItemOptions
+  createDisputeLineItemData
+  createHighValueDisputeLineItem
+  createEmergencyServiceDispute
+  createAnesthesiaDispute
+seeds/factories/organization.factory.ts
+  CreateOrganizationOptions
+  createHealthcareProviderOrganization
+  createHealthPlanOrganization
+  createGenericOrganization
+seeds/factories/user.factory.ts
+  CreateUserOptions
+  createUserData
+  createAdminUser
+  createMasterAdminUser
+  createRegularUser
+  createBannedUser
+  createEligibilitySpecialist
+  createArbitrator
+  createArbitratorContractor
+  createPaymentAdmin
+  createPaymentSpecialist
+  createAccountingUser
+  createPartyUser
+  createCapitolBridgeAdmin
+  createAttorney
+seeds/index.ts
+seeds/payments.ts
+  seedPayments
+seeds/seed-all.ts
+  seedAll
+seeds/site-settings.ts
+  seedSiteSettings
+seeds/test-party-users-org.ts
+  testPartyUsersWithOrganizations
+seeds/users.ts
+  seedUsers
+seeds/utils/auth-helpers.ts
+  createUserWithAuth
+  generateDefaultPassword
+  hasAuthCredentials
+seeds/utils/database.ts
+  prisma
+  clearDatabase
+  disconnectDatabase
+seeds/utils/helpers.ts
+  generateId
+  randomDateBetween
+  randomPastDate
+  randomFutureDate
+  randomBoolean
+  randomDecimal
+  randomPhoneNumber
+  randomSafeEmail
+  randomTaxId
+  randomNPI
+  randomClaimNumber
+  randomDisputeReferenceNumber
+  randomServiceCode
+  randomPlaceOfService
+  randomServiceType
+  randomFilePath
+  logProgress
+seeds/verify-auth.ts
+  verifyAuthSystem
+seeds/verify-data.ts
+  verifySeededData
+seeds/verify-organizations.ts
+  verifyOrganizations
+sentry.edge.config.ts
+sentry.server.config.ts
+sst-env.d.ts
+  Resource
+sst.config.ts
+  default
+test-nacha.js
+tests/actions/admin-actions.test.ts
+tests/actions/admin-reset-2fa.test.ts
+tests/actions/administrative-closure-refund-status.test.ts
+tests/actions/arbitration-actions.test.ts
+tests/actions/cache.test.ts
+  invalidateCachePaths
+  invalidateByContext
+  invalidateCaseCache
+  invalidatePaymentCache
+tests/actions/case-balance-actions.test.ts
+tests/actions/case-validation.test.ts
+tests/actions/eligibility-actions.test.ts
+  getEligibilityCases
+  getEligibilityQuickActionCounts
+tests/actions/organization-check-refund-settings.test.ts
+tests/actions/organization-party-invitations.test.ts
+tests/actions/payment-acknowledgment-variance.test.ts
+tests/actions/payment-actions.test.ts
+tests/actions/payment-failure-variance.test.ts
+tests/actions/refund-processing.test.ts
+tests/actions/task-dispatcher-actions.test.ts
+tests/actions/two-factor-reset.test.ts
+tests/app/api/admin-impersonate.test.ts
+tests/app/api/admin-process-pending-emails.test.ts
+tests/app/api/admin-reset-2fa.test.ts
+tests/app/api/auth-redirect-home.test.ts
+tests/app/api/cases-caseId.test.ts
+tests/app/api/cases-check-dispute-reference.test.ts
+tests/app/api/cases-payment-status.test.ts
+tests/app/api/cases-search.test.ts
+tests/app/api/email-idr-preview.test.ts
+tests/app/api/health.test.ts
+tests/app/api/nacha-generate.test.ts
+tests/app/api/organizations-search.test.ts
+tests/app/api/parse-pdf.test.ts
+tests/app/api/reports-auditing.test.ts
+tests/app/api/reports-case-analytics.test.ts
+tests/app/api/reports-case-balance.test.ts
+tests/app/api/reports-cms-payments.test.ts
+tests/app/api/reports-dashboard-stats.test.ts
+tests/app/api/reports-due-dates.test.ts
+tests/app/api/reports-export.test.ts
+tests/app/api/reports-idre-payouts.test.ts
+tests/app/api/reports-recent-activity.test.ts
+tests/app/api/reports-team-performance.test.ts
+tests/app/api/reports-unpaid-disputes.test.ts
+tests/app/api/stripe-webhook.test.ts
+tests/app/api/system-init-status.test.ts
+tests/app/api/upload-download-url.test.ts
+tests/app/api/upload-presign.test.ts
+tests/app/api/upload-proxy.test.ts
+tests/app/dashboard/reports/case-analytics.test.tsx
+tests/app/dashboard/reports/case-balance.test.tsx
+tests/app/dashboard/reports/cms-payments.test.tsx
+tests/app/dashboard/reports/daily-funds-incoming.test.tsx
+tests/app/dashboard/reports/daily-funds-outgoing.test.tsx
+tests/app/dashboard/reports/daily-transactions.test.tsx
+tests/app/dashboard/reports/due-dates.test.tsx
+tests/app/dashboard/reports/idre-payouts.test.tsx
+tests/app/dashboard/reports/page.test.tsx
+tests/app/dashboard/reports/payment-variance.test.tsx
+tests/app/dashboard/reports/team-performance.test.tsx
+tests/app/dashboard/reports/unpaid-disputes.test.tsx
+tests/app/pages/2fa-login-verify.test.ts
+tests/app/pages/2fa-setup.test.ts
+tests/app/pages/2fa-verify.test.ts
+tests/app/pages/admin-health.test.ts
+tests/app/pages/admin-setup.test.tsx
+tests/app/pages/app-banking.test.ts
+tests/app/pages/app-cases.test.ts
+tests/app/pages/app-dashboard.test.ts
+tests/app/pages/app-invoices.test.ts
+tests/app/pages/app-members.test.ts
+tests/app/pages/app-payments.test.ts
+tests/app/pages/app-refund-settings.test.ts
+tests/app/pages/app-refunds.test.ts
+tests/app/pages/dashboard-account.test.ts
+tests/app/pages/dashboard-admin-closures.test.ts
+tests/app/pages/dashboard-arbitration.test.ts
+tests/app/pages/dashboard-banking.test.ts
+tests/app/pages/dashboard-cases.test.ts
+tests/app/pages/dashboard-cms-invoices.test.ts
+tests/app/pages/dashboard-company.test.ts
+tests/app/pages/dashboard-eligibility.test.ts
+tests/app/pages/dashboard-nacha-history.test.ts
+tests/app/pages/dashboard-organizations.test.ts
+tests/app/pages/dashboard-payments.test.ts
+tests/app/pages/dashboard-reports.test.ts
+tests/app/pages/dashboard.test.ts
+tests/app/pages/global-error.test.tsx
+tests/app/pages/home.test.ts
+tests/app/pages/invite.test.ts
+tests/app/pages/join-organization.test.ts
+tests/app/pages/reset-password.test.tsx
+tests/app/pages/signup.test.tsx
+tests/app/refund-settings/check-refund-settings-client.test.tsx
+tests/arbitration-assignment-unassign.test.ts
+tests/auth/middleware-utils.test.ts
+tests/auth/permissions.test.ts
+tests/auth/roles.test.ts
+tests/auth/utils.test.ts
+tests/case-status-transition.test.ts
+tests/components/account-form.test.tsx
+tests/components/ach-accounts-section.test.tsx
+tests/components/admin-closure/admin-closure-dashboard.test.tsx
+tests/components/admin-closure/send-closure-emails-button.test.tsx
+tests/components/admin-users-table.test.tsx
+tests/components/admin/admin-actions-tab.test.tsx
+tests/components/admin/administrative-closure-modal.test.tsx
+tests/components/admin/administrative-closure-summary.test.tsx
+tests/components/admin/manual-status-adjustment-dialog.test.tsx
+tests/components/app-sidebar.test.tsx
+tests/components/arbitration-dashboard.test.tsx
+tests/components/arbitration-workflow-guide.test.tsx
+tests/components/arbitration/arbitration-action-panel.test.tsx
+tests/components/arbitration/confirm-payback-dialog.test.tsx
+tests/components/arbitration/correct-determination-dialog.test.tsx
+tests/components/arbitration/reopen-for-correction-dialog.test.tsx
+tests/components/arbitration/retry-refund-dialog.test.tsx
+tests/components/auditing-reports.test.tsx
+tests/components/bank-account-card.test.tsx
+tests/components/bank-accounts-manager.test.tsx
+tests/components/banking-setup-form.test.tsx
+tests/components/case-ach-form.test.tsx
+tests/components/case-analytics.test.tsx
+tests/components/case-balance-report.test.tsx
+tests/components/case-detail-header.test.tsx
+tests/components/case-detail-view.test.tsx
+tests/components/case-details-edit-dialog.test.tsx
+tests/components/case-filters-general.test.tsx
+tests/components/case-ledger-view.test.tsx
+tests/components/case-payment-ledger.test.tsx
+tests/components/case-table-read-only.test.tsx
+tests/components/cases-dashboard.test.tsx
+tests/components/check-refund-section.test.tsx
+tests/components/cms-invoice-list.test.tsx
+tests/components/cms-payments-analytics.test.tsx
+tests/components/cms-status-badge.test.tsx
+tests/components/confirmation-modal.test.tsx
+tests/components/contact-edit-dialog.test.tsx
+tests/components/contact-info-form.test.tsx
+tests/components/create-cms-invoice-dialog.test.tsx
+tests/components/daily-funds-incoming-report.test.tsx
+tests/components/daily-funds-outgoing-report.test.tsx
+tests/components/daily-transactions-report.test.tsx
+tests/components/decision-details.test.tsx
+tests/components/decision-summary-card.test.tsx
+tests/components/documentation-checklist.test.tsx
+tests/components/due-date-display.test.tsx
+tests/components/due-dates-report.test.tsx
+tests/components/eligibility-case-filters.test.tsx
+tests/components/eligibility-case-overview.test.tsx
+tests/components/eligibility-confirmation-modal.test.tsx
+tests/components/eligibility-dashboard.test.tsx
+tests/components/eligibility-rfi-modal.test.tsx
+tests/components/email-history-modal.test.tsx
+tests/components/email-preview-modal.test.tsx
+tests/components/enhanced-final-determination-modal.test.tsx
+tests/components/financial-overview.test.tsx
+tests/components/general-dashboard-layout.test.tsx
+tests/components/google-address-form-field.test.tsx
+tests/components/google-address-input.test.tsx
+tests/components/idre-payouts-report.test.tsx
+tests/components/impersonation-banner.test.tsx
+tests/components/invoice-section.test.tsx
+tests/components/manage-members-dialog.test.tsx
+tests/components/missing-contacts-dialog.test.tsx
+tests/components/multi-org-bank-account-dialog.test.tsx
+tests/components/nav-main.test.tsx
+tests/components/nav-user.test.tsx
+tests/components/organization-edit-dialog.test.tsx
+tests/components/organization-financial-controls-utils.test.ts
+tests/components/organization-list.test.tsx
+tests/components/organization-switcher.test.tsx
+tests/components/overall-case-decision-modal.test.tsx
+tests/components/pagination-controls-new.test.tsx
+tests/components/party-dashboard-enhanced.test.tsx
+tests/components/party-dashboard-layout.test.tsx
+tests/components/party-dashboard.test.tsx
+tests/components/party-edit-dialog.test.tsx
+tests/components/party-info-form.test.tsx
+tests/components/party-overview.test.tsx
+tests/components/payment-history-view.test.tsx
+tests/components/payment-variance-report.test.tsx
+tests/components/pending-cms-payments-list.test.tsx
+tests/components/process-cms-invoice-dialog.test.tsx
+tests/components/quick-actions-panel.test.tsx
+tests/components/report-filters.test.tsx
+tests/components/report-page-wrapper.test.tsx
+tests/components/reports-dashboard.test.tsx
+tests/components/send-payment-email-button.test.tsx
+tests/components/sign-in.test.tsx
+tests/components/sign-up.test.tsx
+tests/components/site-header.test.tsx
+tests/components/site-settings.test.tsx
+tests/components/step-basic-info.test.tsx
+tests/components/step-documentation.test.tsx
+tests/components/step-health-plan.test.tsx
+tests/components/step-line-items.test.tsx
+tests/components/step-organization.test.tsx
+tests/components/step-pdf-upload.test.tsx
+tests/components/stripe-payment-form.test.tsx
+tests/components/system-health-status.test.tsx
+tests/components/team-performance-analytics.test.tsx
+tests/components/testing-mode-wrapper.test.tsx
+tests/components/testing-role-dropdown.test.tsx
+tests/components/testing-role-selector.test.tsx
+tests/components/theme-provider.test.tsx
+tests/components/theme-toggle.test.tsx
+tests/components/two-factor-dashboard-card.test.tsx
+tests/components/two-factor-device-change-modal.test.tsx
+tests/components/two-factor-login-verify.test.tsx
+tests/components/two-factor-management.test.tsx
+tests/components/two-factor-setup.test.tsx
+tests/components/two-factor-verification-modal.test.tsx
+tests/components/two-factor-verify.test.tsx
+tests/components/unpaid-disputes-report.test.tsx
+tests/components/user-management.test.tsx
+tests/components/wizard-container.test.tsx
+tests/components/wizard-navigation.test.tsx
+tests/components/wizard-progress.test.tsx
+tests/config/banking.test.ts
+tests/config/stripe.test.ts
+tests/constants/cases.test.ts
+tests/constants/pricing.test.ts
+tests/constants/roles.test.ts
+tests/event-subscribers.integration.test.ts
+tests/event-system.initialization.test.ts
+tests/event-system.performance.test.ts
+tests/hooks/use-bulk-selection.test.ts
+tests/hooks/use-dashboard-new.test.ts
+tests/hooks/use-mobile.test.ts
+tests/hooks/use-party-data.test.tsx
+tests/hooks/use-quick-actions.test.ts
+tests/lib/payments/case-ledger.test.ts
+tests/lib/payments/variance-actions.test.ts
+tests/lib/payments/variance-reconciliation.test.ts
+tests/organizations/bank-accounts.test.ts
+tests/organizations/invoices.test.ts
+tests/services/administrative-closure.test.ts
+tests/services/banking-utils.test.ts
+tests/services/case-service.test.ts
+tests/services/due-date-service.test.ts
+tests/services/email-config.test.ts
+tests/services/email-templates.test.ts
+tests/services/email-utils.test.ts
+tests/services/final-eligibility-payment-correction.test.ts
+tests/services/idr-email-templates.test.ts
+tests/services/mtb-config.test.ts
+tests/services/nacha-sftp-client.test.ts
+tests/services/nacha-validation.test.ts
+tests/services/payment-refund-backfill.test.ts
+tests/services/refund-calculations.test.ts
+tests/services/refund-service.test.ts
+  canAutoApproveDistributions
+  getPendingRefunds
+  markRefundProcessed
+  ensureInternalRefundDistributions
+tests/testing/e2e-route-guard.test.ts
+tests/testing/playwright-database.test.ts
+tests/types/pagination.test.ts
+tests/utils/ach-utils.test.ts
+tests/utils/admin-closure-permissions.test.ts
+tests/utils/admin-closure.test.ts
+tests/utils/arbitration-permissions.test.ts
+tests/utils/assignment-errors.test.ts
+tests/utils/business-day-utils.test.ts
+tests/utils/case-utils.test.ts
+tests/utils/case-wizard-schema.test.ts
+tests/utils/date-utils.test.ts
+tests/utils/documentation-checklist.test.ts
+tests/utils/due-date-utils.test.ts
+tests/utils/eligibility-permissions.test.ts
+tests/utils/encryption.test.ts
+tests/utils/enum-helpers.test.ts
+tests/utils/general-case-permissions.test.ts
+tests/utils/internal-banking.test.ts
+tests/utils/invitation-serializers.test.ts
+tests/utils/invoice-email.test.ts
+tests/utils/party-access.test.ts
+tests/utils/payment-utils.test.ts
+tests/utils/pdf-export.test.ts
+  generateInvoicePDF
+  generateInvoiceCSV
+  generateInvoicePDFBuffer
+tests/utils/report-calculations.test.ts
+tests/utils/rfi-priority-utils.test.ts
+tests/utils/routing-validation.test.ts
+tests/utils/server-status-transitions.test.ts
+tests/utils/short-id.test.ts
+tests/utils/status-transitions.test.ts
+tests/utils/stripe-fees.test.ts
+tests/vitest.setup.ts
+vitest.setup.ts
